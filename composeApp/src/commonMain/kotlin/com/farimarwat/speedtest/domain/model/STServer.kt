@@ -7,5 +7,5 @@ data class STServer(
     val name: String?,
     val sponsor: String?
 ){
-    var distance:Double = 0.0
+    var distance:Int = 0
 }

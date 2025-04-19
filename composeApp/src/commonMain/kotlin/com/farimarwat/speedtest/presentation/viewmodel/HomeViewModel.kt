@@ -21,6 +21,9 @@ class HomeViewModel(
     private var _fetchServerStatus:MutableStateFlow<ApiStatus<ServersResponse>> = MutableStateFlow(ApiStatus.Empty)
     val fetchServerStatus = _fetchServerStatus.asStateFlow()
 
+    private var _servers:MutableStateFlow<List<STServer>> = MutableStateFlow(emptyList())
+    val servers = _servers.asStateFlow()
+
     private var _selectedProvider:MutableStateFlow<STProvider?> = MutableStateFlow(null)
     val selectedProvider = _selectedProvider.asStateFlow()
 
@@ -43,15 +46,18 @@ class HomeViewModel(
                     _fetchServerStatus.value = ApiStatus.Success(it)
                     _selectedProvider.value = it.provider
                     _selectedServer.value = it.servers?.first()
+                    _servers.value = it.servers ?: emptyList()
                 },
                 onError = {
-
                     _fetchServerStatus.value = ApiStatus.Error(it.toString())
                 }
             )
         }
     }
 
+    fun changeSelectedServer(stServer: STServer){
+        _selectedServer.value = stServer
+    }
     override fun onCleared() {
         super.onCleared()
         fetchServersJob?.cancel()

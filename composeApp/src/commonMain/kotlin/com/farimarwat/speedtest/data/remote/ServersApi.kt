@@ -73,7 +73,7 @@ class ServersApi(private val client: HttpClient) {
                     stServer.lon?.toDouble()!!
                 )
 
-                stServer.distance = Utils.calculateDistance(from,to)
+                stServer.distance = Utils.calculateDistanceRounded(from,to)
             }
             list.add(stServer)
         }
