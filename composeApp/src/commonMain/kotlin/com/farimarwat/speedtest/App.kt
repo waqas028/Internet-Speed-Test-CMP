@@ -6,8 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.farimarwat.speedtest.presentation.navigation.Screen
-import com.farimarwat.speedtest.presentation.ui.HomeScreen
-import com.farimarwat.speedtest.presentation.ui.TestScreen
+import com.farimarwat.speedtest.presentation.screen.HomeScreen
+import com.farimarwat.speedtest.presentation.screen.TestScreen
 import com.farimarwat.speedtest.presentation.ui.getColorScheme
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel

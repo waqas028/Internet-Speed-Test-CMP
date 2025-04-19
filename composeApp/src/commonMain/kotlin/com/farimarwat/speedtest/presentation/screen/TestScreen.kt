@@ -1,4 +1,4 @@
-package com.farimarwat.speedtest.presentation.ui
+package com.farimarwat.speedtest.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,7 +21,6 @@ import com.farimarwat.speedtest.presentation.component.SpeedItem
 import com.farimarwat.speedtest.presentation.component.SpeedMeter
 import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.viewmodel.koinViewModel
 import speedtest.composeapp.generated.resources.Res
 import speedtest.composeapp.generated.resources.arrow_down_circle
 import speedtest.composeapp.generated.resources.arrow_up_circle
@@ -47,24 +48,27 @@ fun TestScreen(
             ){
                 SpeedItem(
                     label = "Download",
-                    isCompleted = true,
                     speed = 50f,
+                    isTestInProgress = true,
+                    isCompleted = false,
                     icon = painterResource(Res.drawable.arrow_down_circle),
                     iconColor = MaterialTheme.colorScheme.secondary
                 )
                 SpeedItem(
                     label = "Upload",
-                    isCompleted = false,
                     speed = 90f,
+                    isTestInProgress = false,
+                    isCompleted = false,
                     icon = painterResource(Res.drawable.arrow_up_circle),
                     iconColor = MaterialTheme.colorScheme.tertiary
                 )
             }
+
             SpeedMeter(
                 modifier = Modifier.size(300.dp),
                 backgroundColor = MaterialTheme.colorScheme.background,
                 progressWidth = 50f,
-                progress = 50f ,
+                progress = 20f ,
                 needleColors = listOf(Color.Black,Color.White),
                 needleKnobColors = listOf(Color.Black,Color.Gray),
                 needleKnobSize = 20f,
