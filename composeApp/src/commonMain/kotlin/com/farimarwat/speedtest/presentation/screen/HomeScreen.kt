@@ -2,14 +2,21 @@ package com.farimarwat.speedtest.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.farimarwat.speedtest.data.remote.ApiStatus
+import com.farimarwat.speedtest.presentation.component.CurrentServerStatus
 import com.farimarwat.speedtest.presentation.component.GoButton
+import com.farimarwat.speedtest.presentation.component.Loading
+import com.farimarwat.speedtest.presentation.component.NetworkErrorMessageBox
 import com.farimarwat.speedtest.presentation.navigation.Screen
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -18,9 +25,9 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    navController:NavHostController
-    ){
-    LaunchedEffect(Unit){
+    navController: NavHostController
+) {
+    LaunchedEffect(Unit) {
         viewModel.fetchServers()
     }
     Box(
@@ -28,10 +35,43 @@ fun HomeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
-    ){
+    ) {
+        val fetchServersStatus by viewModel.fetchServerStatus.collectAsStateWithLifecycle()
+        val provider by viewModel.selectedProvider.collectAsStateWithLifecycle()
+        val server by viewModel.selectedServer.collectAsStateWithLifecycle()
+        when (fetchServersStatus) {
+            ApiStatus.Empty -> {
+                Loading()
+            }
 
-       GoButton("Go") {
-           navController.navigate(Screen.Test.route)
-       }
+            is ApiStatus.Error -> {
+                NetworkErrorMessageBox(
+                    message = (fetchServersStatus as ApiStatus.Error).message,
+                    modifier = Modifier,
+                    onRetry = {
+                        viewModel.fetchServers()
+                    },
+                )
+            }
+
+            ApiStatus.Loading -> {
+                Loading()
+            }
+
+            is ApiStatus.Success<*> -> {
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    GoButton("Go") {
+                        navController.navigate(Screen.Test.route)
+                    }
+                    CurrentServerStatus(
+                        provider = provider,
+                        server = server
+                    )
+                }
+            }
+        }
+
     }
 }

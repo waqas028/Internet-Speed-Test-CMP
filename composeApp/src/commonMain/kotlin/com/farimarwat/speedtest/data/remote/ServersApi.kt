@@ -19,28 +19,32 @@ class ServersApi(private val client: HttpClient) {
         onSuccess:(ServersResponse)->Unit,
         onError:(Exception)->Unit
     ){
-        val body:String = client.get {
-            url(BASE_URL_SPEEDTEST+"api/android/config.php")
-        }.body()
-        val doc = Ksoup.parse(body, Parser.xmlParser())
-        val client = doc.select("client")
-        val stProvider = STProvider(
-            client.attr("isp"),
-            client.attr("providerName"),
-            client.attr("lat"),
-            client.attr("lon")
-        )
-        val servers = doc.getElementsByTag("server")
-        if(servers.isNotEmpty()){
-            val list = getServers(servers, stProvider)
-            val response = ServersResponse(
-                stProvider,
-                list
-            )
-            onSuccess(response)
-        } else {
-            onError(Exception("No servers found"))
-        }
+       try{
+           val body:String = client.get {
+               url(BASE_URL_SPEEDTEST+"api/android/config.php")
+           }.body()
+           val doc = Ksoup.parse(body, Parser.xmlParser())
+           val client = doc.select("client")
+           val stProvider = STProvider(
+               client.attr("isp"),
+               client.attr("providerName"),
+               client.attr("lat"),
+               client.attr("lon")
+           )
+           val servers = doc.getElementsByTag("server")
+           if(servers.isNotEmpty()){
+               val list = getServers(servers, stProvider)
+               val response = ServersResponse(
+                   stProvider,
+                   list
+               )
+               onSuccess(response)
+           } else {
+               onError(Exception("No servers found"))
+           }
+       }catch (ex:Exception){
+           onError(ex)
+       }
 
     }
 
