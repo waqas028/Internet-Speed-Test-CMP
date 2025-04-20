@@ -72,19 +72,19 @@ fun SpeedItem(
                 text = label,
                 color = if (!isTestInProgress) Color.White.copy(alpha = currentAlpha)
                 else Color.Gray.copy(alpha = currentAlpha),
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.titleMedium
             )
             Text(
                 text = "Mbps",
                 color = Color.Gray.copy(alpha = currentAlpha),
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.titleSmall
             )
         }
         Text(
             text = if(!isCompleted) "_" else "$speed",
             color = Color.White.copy(alpha = currentAlpha),
             fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleMedium
         )
     }
 }
