@@ -1,9 +1,16 @@
 package com.farimarwat.speedtest.presentation.screen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +35,7 @@ import com.farimarwat.speedtest.presentation.component.NetworkErrorMessageBox
 import com.farimarwat.speedtest.presentation.component.ServerItem
 import com.farimarwat.speedtest.presentation.navigation.Screen
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
@@ -73,18 +81,46 @@ fun HomeScreen(
 
             is ApiStatus.Success<*> -> {
                 Column (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    GoButton("Go") {
-                        navController.navigate(Screen.Test.route)
+                    var showServersDetails by remember { mutableStateOf(false) }
+                    var showGoButton by remember { mutableStateOf(false) }
+                    LaunchedEffect(Unit){
+                        delay(200)
+                        showGoButton = true
+                        delay(1000)
+                        showServersDetails = true
                     }
-                    CurrentServerStatus(
-                        provider = provider,
-                        server = server,
-                        onChangeServerClick = {
-                            showServers = true
+                    AnimatedVisibility(
+                        visible = showGoButton,
+                        enter =  scaleIn(
+                            animationSpec = tween(
+                                durationMillis = 1000,
+                            )
+                        )
+                    ){
+                        GoButton("Go") {
+                            navController.navigate(Screen.Test.route)
                         }
-                    )
+
+                    }
+                    AnimatedVisibility(
+                        visible = showServersDetails,
+                        enter = fadeIn() + slideInHorizontally(
+                            animationSpec = tween(1000)
+                        )
+                    ){
+                        CurrentServerStatus(
+                            provider = provider,
+                            server = server,
+                            onChangeServerClick = {
+                                showServers = true
+                            }
+                        )
+                    }
                 }
             }
         }
