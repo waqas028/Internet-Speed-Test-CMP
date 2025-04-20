@@ -24,6 +24,7 @@ import com.farimarwat.speedtest.presentation.component.NetworkMetricItem
 import com.farimarwat.speedtest.presentation.component.SpeedItem
 import com.farimarwat.speedtest.presentation.component.SpeedMeter
 import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import speedtest.composeapp.generated.resources.Res
 import speedtest.composeapp.generated.resources.arrow_down_circle
@@ -37,6 +38,10 @@ fun TestScreen(
     viewModel: TestViewModel,
     navController: NavHostController
     ){
+    LaunchedEffect(Unit){
+        delay(500)
+        viewModel.startTest()
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -78,13 +83,13 @@ fun TestScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
-                    val ping by viewModel.ping.collectAsStateWithLifecycle()
-                    val jitter by viewModel.jitter.collectAsStateWithLifecycle()
+                    val latencyResult by viewModel.latencyResult.collectAsStateWithLifecycle()
+
                     NetworkMetricItem(
                         modifier = Modifier
                             .weight(0.5f),
                         title = "Ping",
-                        value = "$ping",
+                        value = "${latencyResult.averagePingMs}",
                         icon = {
                             Icon(
                                 modifier = Modifier
@@ -99,7 +104,7 @@ fun TestScreen(
                         modifier = Modifier
                             .weight(0.5f),
                         title = "Jitter",
-                        value = "$jitter",
+                        value = "${latencyResult.jitterMs}",
                         icon = {
                             Icon(
                                 modifier = Modifier
