@@ -1,15 +1,12 @@
-package com.farimarwat.speedtest.utils
+package com.farimarwat.speedtest.core
 
-import com.farimarwat.speedtest.utils.Urls.URL02
+import com.farimarwat.speedtest.core.Urls.URL02
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.timeout
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.request.request
-import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
-import io.ktor.websocket.close
 import io.ktor.websocket.readText
-import io.ktor.websocket.timeout
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 import kotlin.math.abs

@@ -52,7 +52,7 @@ class ServersApi(private val client: HttpClient) {
         val list = mutableListOf<STServer>()
         for (item in servers) {
             val server = item.select("server")
-            var url = server.attr("url")
+            var url = server.attr("url").substringBeforeLast("/")
             if(!url.contains("8080")){
                 url = url.replace(":80", ":8080")
             }

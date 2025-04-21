@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.farimarwat.speedtest.domain.model.STServer
 import com.farimarwat.speedtest.presentation.component.NetworkMetricItem
 import com.farimarwat.speedtest.presentation.component.SpeedItem
 import com.farimarwat.speedtest.presentation.component.SpeedMeter
@@ -34,13 +35,15 @@ import speedtest.composeapp.generated.resources.ic_ping
 
 @Composable
 fun TestScreen(
+    url:String,
     viewModel: TestViewModel,
     navController: NavHostController
     ){
     LaunchedEffect(Unit){
         delay(500)
-        viewModel.startTest()
+        viewModel.startTest(url)
     }
+    val currentSpeed by viewModel.currentSpeed.collectAsStateWithLifecycle()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -121,7 +124,7 @@ fun TestScreen(
                 modifier = Modifier.size(300.dp),
                 backgroundColor = MaterialTheme.colorScheme.background,
                 progressWidth = 50f,
-                progress = 20f ,
+                progress = currentSpeed.toFloat() ,
                 needleColors = listOf(Color.Black,Color.White),
                 needleKnobColors = listOf(Color.Black,Color.Gray),
                 needleKnobSize = 20f,

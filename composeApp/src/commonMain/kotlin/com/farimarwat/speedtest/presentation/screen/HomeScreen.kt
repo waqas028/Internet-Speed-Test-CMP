@@ -36,6 +36,10 @@ import com.farimarwat.speedtest.presentation.component.ServerItem
 import com.farimarwat.speedtest.presentation.component.ServerList
 import com.farimarwat.speedtest.presentation.navigation.Screen
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
+import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel
+import com.farimarwat.speedtest.utils.encodeUrl
+import io.ktor.http.encodeURLParameter
+import io.ktor.http.encodeURLPath
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
@@ -103,7 +107,8 @@ fun HomeScreen(
                         )
                     ){
                         GoButton("Go") {
-                            navController.navigate(Screen.Test.route)
+                            val url = server?.url.toString().encodeUrl()
+                            navController.navigate("${Screen.Test.route}/$url")
                         }
 
                     }

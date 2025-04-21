@@ -62,6 +62,8 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.utils)
+
             implementation(libs.navigation.compose)
             implementation(libs.ksoup)
             implementation(libs.compottie)
