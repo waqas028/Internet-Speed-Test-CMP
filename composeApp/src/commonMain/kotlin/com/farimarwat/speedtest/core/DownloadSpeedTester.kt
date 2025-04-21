@@ -50,10 +50,10 @@ class DownloadSpeedTester(private val client: HttpClient) {
 
                         // Instantaneous speed calculation
                         val timeSinceLast = lastTimestamp.elapsedNow()
-                        if (timeSinceLast >= 500.milliseconds) {
+                        if (timeSinceLast >= 100.milliseconds) {
                             val bytesInInterval = totalBytes - lastBytes
                             val speedMbps = (bytesInInterval * 8 / (timeSinceLast.inWholeMilliseconds / 1000.0)) / 1_000_000.0
-                            onProgress(speedMbps.roundToDecimals(2))
+                            onProgress(speedMbps)
                             lastBytes = totalBytes
                             lastTimestamp = TimeSource.Monotonic.markNow()
                         }
@@ -67,9 +67,11 @@ class DownloadSpeedTester(private val client: HttpClient) {
 
         // Final average Mbps
         elapsedTime = startTime.elapsedNow()
-        return if (elapsedTime.inWholeMilliseconds > 0) {
+        val finalSpeed =  if (elapsedTime.inWholeMilliseconds > 0) {
             (totalBytes * 8 / (elapsedTime.inWholeMilliseconds / 1000.0)) / 1_000_000.0
         } else 0.0
+
+        return finalSpeed
     }
 }
 

@@ -41,3 +41,6 @@ fun Double.roundToDecimals(decimals: Int): Double {
     return round(this * factor) / factor
 }
 
+expect fun Float.to2DecimalString(): String
+
+

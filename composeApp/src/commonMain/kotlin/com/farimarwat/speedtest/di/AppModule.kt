@@ -1,6 +1,7 @@
 package com.farimarwat.speedtest.di
 
 import com.farimarwat.speedtest.core.DownloadSpeedTester
+import com.farimarwat.speedtest.core.UploadSpeedTester
 import com.farimarwat.speedtest.data.remote.ServersApi
 import com.farimarwat.speedtest.data.repository.ServersRepositoryImpl
 import com.farimarwat.speedtest.domain.repository.ServersRepository
@@ -21,9 +22,9 @@ val sharedModule = module {
     singleOf(::FetchServersUseCase)
     singleOf(::WebSocketPingMeasurer)
     singleOf(::DownloadSpeedTester)
+    singleOf(::UploadSpeedTester)
     viewModelOf(::HomeViewModel)
     viewModelOf(::TestViewModel)
-
 }
 
 expect val httpClient:HttpClient

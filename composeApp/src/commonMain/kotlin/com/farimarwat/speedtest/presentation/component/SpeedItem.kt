@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.farimarwat.speedtest.domain.model.TestStatus
+import com.farimarwat.speedtest.utils.to2DecimalString
 
 
 @Composable
@@ -80,7 +81,7 @@ fun SpeedItem(
             )
         }
         Text(
-            text = if(!status.isTestCompleted) "_" else "${status.speed}",
+            text = if(!status.isTestCompleted) "_" else status.speed.toFloat().to2DecimalString(),
             color = Color.White.copy(alpha = currentAlpha),
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleMedium

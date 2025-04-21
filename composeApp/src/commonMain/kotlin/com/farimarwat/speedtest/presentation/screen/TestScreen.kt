@@ -128,7 +128,7 @@ fun TestScreen(
                 needleKnobSize = 20f,
                 progressColors = listOf(Color.Red, Color.Yellow),
                 labelColor = Color.White,
-                unitText = "MB"
+                unitText = "Mbps"
             )
         }
     }

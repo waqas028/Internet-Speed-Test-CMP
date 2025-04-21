@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
+import com.farimarwat.speedtest.utils.to2DecimalString
 import kotlin.math.*
 
 @Composable
@@ -129,7 +130,7 @@ fun SpeedMeter(
 
         // Drawing progress value
         val progressText = textMeasurer.measure(
-            text = progress.toString(),
+            text = progress.to2DecimalString(),
             style = TextStyle(
                 color = labelColor,
                 fontSize = archSize.times(0.06f).sp,
