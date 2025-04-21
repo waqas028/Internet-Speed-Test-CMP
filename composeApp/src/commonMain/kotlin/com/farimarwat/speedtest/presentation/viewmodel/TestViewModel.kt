@@ -6,9 +6,8 @@ import com.farimarwat.speedtest.core.DownloadSpeedTester
 
 import com.farimarwat.speedtest.core.PingResult
 import com.farimarwat.speedtest.core.WebSocketPingMeasurer
-import com.farimarwat.speedtest.core.roundToDecimals
-import com.farimarwat.speedtest.domain.model.STServer
 import com.farimarwat.speedtest.domain.model.TestStatus
+import com.farimarwat.speedtest.utils.roundToDecimals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
@@ -66,7 +65,6 @@ class TestViewModel(
             .measurePing()
     }
     private suspend fun testDownload() {
-        _currentSpeed.value = 0.0
         _downloadTestStatus.value = _downloadTestStatus.value.copy(isTestRunning = true)
         val url = mUrl
         val fileUrls = listOf(
@@ -83,9 +81,8 @@ class TestViewModel(
             .testDownloadSpeed(
                 fileUrls = fileUrls,
                 testDuration = 10.seconds,
-                onProgress = { currentSpeed, progress ->
+                onProgress = { currentSpeed ->
                     _currentSpeed.value = currentSpeed
-                    println("CurrentSpeed: ${currentSpeed}, Progress: $progress")
                 }
             )
         _downloadTestStatus.value = _downloadTestStatus.value.copy(
@@ -93,7 +90,7 @@ class TestViewModel(
             isTestCompleted = true,
             speed = finalSpeed.roundToDecimals(2)
         )
-
+        _currentSpeed.value = 0.0
 
     }
     fun resetTest(){

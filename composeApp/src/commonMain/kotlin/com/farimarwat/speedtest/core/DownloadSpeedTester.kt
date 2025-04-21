@@ -1,5 +1,6 @@
 package com.farimarwat.speedtest.core
 
+import com.farimarwat.speedtest.utils.roundToDecimals
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -13,11 +14,6 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.utils.io.*
-import kotlin.time.*
 import kotlin.time.Duration.Companion.milliseconds
 
 class DownloadSpeedTester(private val client: HttpClient) {
@@ -25,7 +21,7 @@ class DownloadSpeedTester(private val client: HttpClient) {
     suspend fun testDownloadSpeed(
         fileUrls: List<String>,
         testDuration: Duration = 20.seconds,
-        onProgress: (currentSpeedMbps: Double, progress: Float) -> Unit
+        onProgress: (currentSpeedMbps: Double) -> Unit
     ): Double {
         var totalBytes = 0L
         val startTime = TimeSource.Monotonic.markNow()
@@ -57,9 +53,7 @@ class DownloadSpeedTester(private val client: HttpClient) {
                         if (timeSinceLast >= 500.milliseconds) {
                             val bytesInInterval = totalBytes - lastBytes
                             val speedMbps = (bytesInInterval * 8 / (timeSinceLast.inWholeMilliseconds / 1000.0)) / 1_000_000.0
-                            val progress = elapsedTime.inWholeMilliseconds.toFloat() / testDuration.inWholeMilliseconds.toFloat()
-                            onProgress(speedMbps.roundToDecimals(2), progress.coerceIn(0f, 1f))
-
+                            onProgress(speedMbps.roundToDecimals(2))
                             lastBytes = totalBytes
                             lastTimestamp = TimeSource.Monotonic.markNow()
                         }
@@ -80,7 +74,3 @@ class DownloadSpeedTester(private val client: HttpClient) {
 }
 
 
-fun Double.roundToDecimals(decimals: Int): Double {
-    val factor = 10.0.pow(decimals)
-    return round(this * factor) / factor
-}

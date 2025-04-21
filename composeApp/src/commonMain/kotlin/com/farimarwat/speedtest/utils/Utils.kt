@@ -36,3 +36,8 @@ object Utils {
     private fun Double.toRadians() = this * PI / 180
 }
 
+fun Double.roundToDecimals(decimals: Int): Double {
+    val factor = 10.0.pow(decimals)
+    return round(this * factor) / factor
+}
+
