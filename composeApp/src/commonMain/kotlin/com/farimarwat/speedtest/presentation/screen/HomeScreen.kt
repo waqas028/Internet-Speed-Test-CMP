@@ -33,6 +33,7 @@ import com.farimarwat.speedtest.presentation.component.GoButton
 import com.farimarwat.speedtest.presentation.component.Loading
 import com.farimarwat.speedtest.presentation.component.NetworkErrorMessageBox
 import com.farimarwat.speedtest.presentation.component.ServerItem
+import com.farimarwat.speedtest.presentation.component.ServerList
 import com.farimarwat.speedtest.presentation.navigation.Screen
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
 import kotlinx.coroutines.delay
@@ -48,7 +49,6 @@ fun HomeScreen(
         viewModel.fetchServers()
     }
 
-    val sheetState = rememberModalBottomSheetState()
     var showServers by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -127,24 +127,16 @@ fun HomeScreen(
 
         //servers list
         if(showServers){
-            ModalBottomSheet(
-                sheetState = sheetState,
-                onDismissRequest = {
+            ServerList(
+                list = serversList,
+                onDismiss = {
+                    showServers = false
+                },
+                onItemSelected = {
+                    viewModel.changeSelectedServer(it)
                     showServers = false
                 }
-            ){
-                LazyColumn {
-                    items(serversList){item ->
-                        ServerItem(
-                            server = item,
-                            onClick = {
-                                viewModel.changeSelectedServer(it)
-                                showServers = false
-                            }
-                        )
-                    }
-                }
-            }
+            )
         }
     }
 }

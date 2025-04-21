@@ -65,6 +65,8 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.ksoup)
             implementation(libs.compottie)
+
+            implementation(libs.bundles.coil)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

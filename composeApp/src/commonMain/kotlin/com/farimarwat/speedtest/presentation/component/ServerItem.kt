@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -20,8 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.farimarwat.speedtest.domain.model.STServer
 import org.jetbrains.compose.resources.painterResource
 import speedtest.composeapp.generated.resources.Res
@@ -31,6 +36,7 @@ import speedtest.composeapp.generated.resources.server
 fun ServerItem(
     server: STServer,
     onClick: (STServer) -> Unit = {},
+    icon:Painter,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -75,16 +81,16 @@ fun ServerItem(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(Res.drawable.server),
+                        imageVector = Icons.Default.Star,
                         contentDescription = "Server",
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp)  // Smaller icon
+                        modifier = Modifier.size(20.dp)
                     )
                 }
 
                 // Server Text
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp)  // Tighter text spacing
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
                         text = server.sponsor.toString(),
