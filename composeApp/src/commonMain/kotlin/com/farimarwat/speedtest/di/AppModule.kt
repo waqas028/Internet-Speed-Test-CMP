@@ -6,7 +6,7 @@ import com.farimarwat.speedtest.domain.repository.ServersRepository
 import com.farimarwat.speedtest.domain.usecase.FetchServersUseCase
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel
-import com.farimarwat.speedtest.utils.NetworkLatencyMeasurer
+import com.farimarwat.speedtest.utils.WebSocketPingMeasurer
 import io.ktor.client.HttpClient
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -18,7 +18,7 @@ val sharedModule = module {
     singleOf(::ServersApi)
     singleOf(::ServersRepositoryImpl).bind<ServersRepository>()
     singleOf(::FetchServersUseCase)
-    singleOf(::NetworkLatencyMeasurer)
+    singleOf(::WebSocketPingMeasurer)
     viewModelOf(::HomeViewModel)
     viewModelOf(::TestViewModel)
 

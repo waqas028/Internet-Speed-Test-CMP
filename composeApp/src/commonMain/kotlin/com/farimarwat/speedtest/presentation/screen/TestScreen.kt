@@ -31,7 +31,6 @@ import speedtest.composeapp.generated.resources.arrow_down_circle
 import speedtest.composeapp.generated.resources.arrow_up_circle
 import speedtest.composeapp.generated.resources.ic_jitter
 import speedtest.composeapp.generated.resources.ic_ping
-import speedtest.composeapp.generated.resources.wifi
 
 @Composable
 fun TestScreen(
@@ -83,7 +82,7 @@ fun TestScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
-                    val latencyResult by viewModel.latencyResult.collectAsStateWithLifecycle()
+                    val latencyResult by viewModel.pingResult.collectAsStateWithLifecycle()
 
                     NetworkMetricItem(
                         modifier = Modifier
