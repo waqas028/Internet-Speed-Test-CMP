@@ -25,16 +25,15 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.farimarwat.speedtest.domain.model.TestStatus
 
 
 @Composable
 fun SpeedItem(
     label: String,
-    speed: Float,
-    isTestInProgress: Boolean,
-    isCompleted:Boolean,
     icon: Painter,
-    iconColor: Color
+    iconColor: Color,
+    status: TestStatus
 ) {
     val infiniteTransition = rememberInfiniteTransition()
     val pulseAlpha by infiniteTransition.animateFloat(
@@ -50,7 +49,7 @@ fun SpeedItem(
         animationSpec = tween(500)
     )
 
-    val currentAlpha = if (isTestInProgress) pulseAlpha else idleAlpha
+    val currentAlpha = if (status.isTestRunning) pulseAlpha else idleAlpha
 
     Column(
         modifier = Modifier
@@ -70,7 +69,7 @@ fun SpeedItem(
             )
             Text(
                 text = label,
-                color = if (!isTestInProgress) Color.White.copy(alpha = currentAlpha)
+                color = if (!status.isTestRunning) Color.White.copy(alpha = currentAlpha)
                 else Color.Gray.copy(alpha = currentAlpha),
                 style = MaterialTheme.typography.titleMedium
             )
@@ -81,7 +80,7 @@ fun SpeedItem(
             )
         }
         Text(
-            text = if(!isCompleted) "_" else "$speed",
+            text = if(!status.isTestCompleted) "_" else "${status.speed}",
             color = Color.White.copy(alpha = currentAlpha),
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleMedium

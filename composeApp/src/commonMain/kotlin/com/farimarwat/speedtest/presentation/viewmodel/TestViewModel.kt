@@ -6,7 +6,9 @@ import com.farimarwat.speedtest.core.DownloadSpeedTester
 
 import com.farimarwat.speedtest.core.PingResult
 import com.farimarwat.speedtest.core.WebSocketPingMeasurer
+import com.farimarwat.speedtest.core.roundToDecimals
 import com.farimarwat.speedtest.domain.model.STServer
+import com.farimarwat.speedtest.domain.model.TestStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
@@ -14,12 +16,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlin.time.Duration.Companion.seconds
 
 class TestViewModel(
     private val webSocketPingMeasurer: WebSocketPingMeasurer,
     private val downloadSpeedTester: DownloadSpeedTester
 ):ViewModel() {
     var mUrl:String = ""
+
+    private var _downloadTestStatus:MutableStateFlow<TestStatus> = MutableStateFlow(TestStatus())
+    val downloadTestStatus = _downloadTestStatus.asStateFlow()
+    private var _uploadTestStatus:MutableStateFlow<TestStatus> = MutableStateFlow(TestStatus())
+    val uploadTestStatus = _uploadTestStatus.asStateFlow()
+
     private var _pingResult:MutableStateFlow<PingResult> =
         MutableStateFlow(PingResult(0,0,0.0f))
     val pingResult = _pingResult.asStateFlow()
@@ -35,7 +44,6 @@ class TestViewModel(
 
     fun startTest(url:String) = viewModelScope.launch(Dispatchers.IO){
         mUrl = url
-        println("Url: $mUrl")
         if (mUrl.isEmpty()) return@launch
         resetTest()
 
@@ -58,6 +66,8 @@ class TestViewModel(
             .measurePing()
     }
     private suspend fun testDownload() {
+        _currentSpeed.value = 0.0
+        _downloadTestStatus.value = _downloadTestStatus.value.copy(isTestRunning = true)
         val url = mUrl
         val fileUrls = listOf(
             "${url}/random4000x4000.jpg",
@@ -72,16 +82,32 @@ class TestViewModel(
         val finalSpeed = downloadSpeedTester
             .testDownloadSpeed(
                 fileUrls = fileUrls,
+                testDuration = 10.seconds,
                 onProgress = { currentSpeed, progress ->
                     _currentSpeed.value = currentSpeed
                     println("CurrentSpeed: ${currentSpeed}, Progress: $progress")
                 }
             )
-        println("FinalSpeed: $finalSpeed")
+        _downloadTestStatus.value = _downloadTestStatus.value.copy(
+            isTestRunning = false,
+            isTestCompleted = true,
+            speed = finalSpeed.roundToDecimals(2)
+        )
+
 
     }
     fun resetTest(){
         _pingResult.value = PingResult(0,0,0.0f)
         _isTesting.value = false
+        _downloadTestStatus.value = _downloadTestStatus.value.copy(
+            isTestRunning = false,
+            isTestCompleted = false,
+            speed = 0.0
+        )
+        _uploadTestStatus.value = _uploadTestStatus.value.copy(
+            isTestRunning = false,
+            isTestCompleted = false,
+            speed = 0.0
+        )
     }
 }

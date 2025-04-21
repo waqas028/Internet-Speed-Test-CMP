@@ -44,6 +44,8 @@ fun TestScreen(
         viewModel.startTest(url)
     }
     val currentSpeed by viewModel.currentSpeed.collectAsStateWithLifecycle()
+    val downloadTestStatus by viewModel.downloadTestStatus.collectAsStateWithLifecycle()
+    val uploadTestStatus by viewModel.uploadTestStatus.collectAsStateWithLifecycle()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -63,19 +65,15 @@ fun TestScreen(
                 ){
                     SpeedItem(
                         label = "Download",
-                        speed = 50f,
-                        isTestInProgress = true,
-                        isCompleted = false,
                         icon = painterResource(Res.drawable.arrow_down_circle),
-                        iconColor = MaterialTheme.colorScheme.secondary
+                        iconColor = MaterialTheme.colorScheme.secondary,
+                        status = downloadTestStatus
                     )
                     SpeedItem(
                         label = "Upload",
-                        speed = 90f,
-                        isTestInProgress = false,
-                        isCompleted = false,
                         icon = painterResource(Res.drawable.arrow_up_circle),
-                        iconColor = MaterialTheme.colorScheme.tertiary
+                        iconColor = MaterialTheme.colorScheme.tertiary,
+                        status = uploadTestStatus
                     )
                 }
 
