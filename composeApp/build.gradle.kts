@@ -63,6 +63,7 @@ kotlin {
 
             //SqlDelight
             implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.extensions)
 
             //datetime
             implementation(libs.kotlinx.datetime)

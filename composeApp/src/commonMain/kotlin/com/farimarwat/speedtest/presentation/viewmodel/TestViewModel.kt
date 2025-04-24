@@ -7,8 +7,10 @@ import com.farimarwat.speedtest.core.DownloadSpeedTester
 import com.farimarwat.speedtest.core.PingResult
 import com.farimarwat.speedtest.core.UploadSpeedTester
 import com.farimarwat.speedtest.core.WebSocketPingMeasurer
-import com.farimarwat.speedtest.domain.model.TestStatus
-import com.farimarwat.speedtest.utils.roundToDecimals
+import com.farimarwat.speedtest.domain.model.SpeedTest
+import com.farimarwat.speedtest.presentation.status.TestStatus
+import com.farimarwat.speedtest.domain.usecase.InsertTestSpeedUseCase
+import com.farimarwat.speedtest.presentation.status.OverallTestStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
@@ -22,9 +24,12 @@ import kotlin.time.Duration.Companion.seconds
 class TestViewModel(
     private val webSocketPingMeasurer: WebSocketPingMeasurer,
     private val downloadSpeedTester: DownloadSpeedTester,
-    private val uploadSpeedTester: UploadSpeedTester
+    private val uploadSpeedTester: UploadSpeedTester,
+    private val insertTestSpeedUseCase: InsertTestSpeedUseCase
 ):ViewModel() {
     var mUrl:String = ""
+    private var _overAllTestStatus:MutableStateFlow<OverallTestStatus> = MutableStateFlow(OverallTestStatus.Idle)
+    val overallTestStatus = _overAllTestStatus.asStateFlow()
 
     private var _downloadTestStatus:MutableStateFlow<TestStatus> = MutableStateFlow(TestStatus())
     val downloadTestStatus = _downloadTestStatus.asStateFlow()
@@ -35,8 +40,6 @@ class TestViewModel(
         MutableStateFlow(PingResult(0,0,0.0f))
     val pingResult = _pingResult.asStateFlow()
 
-    private var _isTesting:MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isTesting = _isTesting.asStateFlow()
     private var _currentSpeed:MutableStateFlow<Double> = MutableStateFlow(0.0)
     val currentSpeed = _currentSpeed.asStateFlow()
 
@@ -46,11 +49,10 @@ class TestViewModel(
 
     fun startTest(url:String) = viewModelScope.launch(Dispatchers.IO){
         mUrl = url
-        println("MyUrl:$mUrl")
         if (mUrl.isEmpty()) return@launch
         resetTest()
 
-        _isTesting.value = true
+        _overAllTestStatus.value = OverallTestStatus.Running
         testLatencyMeasureJob?.cancel()
         testDownloadJob?.cancel()
         //NetworkMeasure
@@ -118,10 +120,15 @@ class TestViewModel(
             speed = finalSpeed
         )
         _currentSpeed.value = 0.0
+        _overAllTestStatus.value = OverallTestStatus.Finished
+    }
+
+    fun insertSpeedTest(speedTest: SpeedTest) = viewModelScope.launch(Dispatchers.IO) {
+        insertTestSpeedUseCase(speedTest)
     }
     fun resetTest(){
         _pingResult.value = PingResult(0,0,0.0f)
-        _isTesting.value = false
+        _overAllTestStatus.value = OverallTestStatus.Idle
         _downloadTestStatus.value = _downloadTestStatus.value.copy(
             isTestRunning = false,
             isTestCompleted = false,

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.farimarwat.speedtest.domain.model.STServer
 import com.farimarwat.speedtest.presentation.component.NetworkMetricItem
@@ -45,6 +46,12 @@ fun TestScreen(
         val url = homeViewModel.selectedServer.value?.url
         url?.let {
             testViewModel.startTest(url)
+        }
+    }
+    val isTesting by testViewModel.isTesting.collectAsStateWithLifecycle()
+    LaunchedEffect(isTesting){
+        if(isTesting){
+
         }
     }
     val currentSpeed by testViewModel.currentSpeed.collectAsStateWithLifecycle()

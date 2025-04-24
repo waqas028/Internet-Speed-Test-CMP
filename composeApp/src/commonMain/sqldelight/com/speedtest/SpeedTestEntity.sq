@@ -7,14 +7,16 @@ CREATE TABLE SpeedTestEntity(
   providerLon TEXT NOT NULL,
   serverLat TEXT NOT NULL,
   serverLon TEXT NOT NULL,
+  downSpeed TEXT NOT NULL,
+  upSpeed TEXT NOT NULL,
   performedAt INTEGER NOT NULL
 );
 
 -- Insert query
 insertSpeedTest:
 INSERT INTO SpeedTestEntity(
-  providerName, serverName, providerLat, providerLon, serverLat, serverLon, performedAt
-) VALUES (?, ?, ?, ?, ?, ?, ?);
+  providerName, serverName, providerLat, providerLon, serverLat, serverLon, downSpeed, upSpeed, performedAt
+) VALUES (?, ?, ?, ?, ?, ?, ?,?,?);
 
 -- Delete single item by ID
 deleteById:

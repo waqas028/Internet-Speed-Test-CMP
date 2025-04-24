@@ -1,4 +1,4 @@
-package com.farimarwat.speedtest.domain.model
+package com.farimarwat.speedtest.presentation.status
 
 data class TestStatus(
     var isTestRunning:Boolean = false,

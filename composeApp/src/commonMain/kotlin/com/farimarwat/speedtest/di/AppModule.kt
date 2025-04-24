@@ -9,6 +9,10 @@ import com.farimarwat.speedtest.domain.usecase.FetchServersUseCase
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel
 import com.farimarwat.speedtest.core.WebSocketPingMeasurer
+import com.farimarwat.speedtest.data.local.SpeedTestDataSource
+import com.farimarwat.speedtest.data.repository.SpeedTestRepositoryImpl
+import com.farimarwat.speedtest.domain.repository.SpeedTestRepository
+import com.farimarwat.speedtest.domain.usecase.GetAllTestSpeedUseCase
 import com.farimarwat.speedtest.presentation.screen.SettingsScreen
 import com.farimarwat.speedtest.presentation.viewmodel.HistoryScreenViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.SettingsScreenViewModel
@@ -22,10 +26,13 @@ import org.koin.dsl.module
 val sharedModule = module {
     singleOf(::ServersApi)
     singleOf(::ServersRepositoryImpl).bind<ServersRepository>()
+    singleOf(::SpeedTestRepositoryImpl).bind<SpeedTestRepository>()
     singleOf(::FetchServersUseCase)
     singleOf(::WebSocketPingMeasurer)
     singleOf(::DownloadSpeedTester)
     singleOf(::UploadSpeedTester)
+    singleOf(::SpeedTestDataSource)
+    singleOf(::GetAllTestSpeedUseCase)
     viewModelOf(::HomeViewModel)
     viewModelOf(::TestViewModel)
     viewModelOf(::HistoryScreenViewModel)
