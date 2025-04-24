@@ -9,6 +9,9 @@ import com.farimarwat.speedtest.domain.usecase.FetchServersUseCase
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel
 import com.farimarwat.speedtest.core.WebSocketPingMeasurer
+import com.farimarwat.speedtest.presentation.screen.SettingsScreen
+import com.farimarwat.speedtest.presentation.viewmodel.HistoryScreenViewModel
+import com.farimarwat.speedtest.presentation.viewmodel.SettingsScreenViewModel
 import io.ktor.client.HttpClient
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -25,6 +28,8 @@ val sharedModule = module {
     singleOf(::UploadSpeedTester)
     viewModelOf(::HomeViewModel)
     viewModelOf(::TestViewModel)
+    viewModelOf(::HistoryScreenViewModel)
+    viewModelOf(::SettingsScreenViewModel)
 }
 
 expect val httpClient:HttpClient
