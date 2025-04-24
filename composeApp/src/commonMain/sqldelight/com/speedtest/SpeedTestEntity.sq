@@ -1,0 +1,36 @@
+-- Corrected table definition (SQLite doesn't have AUTO_INCREMENT, use PRIMARY KEY AUTOINCREMENT instead)
+CREATE TABLE SpeedTestEntity(
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  providerName TEXT NOT NULL,
+  serverName TEXT NOT NULL,
+  providerLat TEXT NOT NULL,
+  providerLon TEXT NOT NULL,
+  serverLat TEXT NOT NULL,
+  serverLon TEXT NOT NULL,
+  performedAt INTEGER NOT NULL
+);
+
+-- Insert query
+insertSpeedTest:
+INSERT INTO SpeedTestEntity(
+  providerName, serverName, providerLat, providerLon, serverLat, serverLon, performedAt
+) VALUES (?, ?, ?, ?, ?, ?, ?);
+
+-- Delete single item by ID
+deleteById:
+DELETE FROM SpeedTestEntity
+WHERE id = ?;
+
+-- Delete all items
+deleteAll:
+DELETE FROM SpeedTestEntity;
+
+-- List all items
+getAllSpeedTests:
+SELECT * FROM SpeedTestEntity
+ORDER BY performedAt DESC;
+
+-- Get single item by ID
+getSpeedTestById:
+SELECT * FROM SpeedTestEntity
+WHERE id = ?;

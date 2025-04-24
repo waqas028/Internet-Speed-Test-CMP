@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -30,17 +31,6 @@ kotlin {
     }
     
     sourceSets {
-        
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-
-
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-            implementation(libs.koin.android)
-        }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -68,10 +58,33 @@ kotlin {
             implementation(libs.ksoup)
             implementation(libs.compottie)
 
+            //coil
             implementation(libs.bundles.coil)
+
+            //SqlDelight
+            implementation(libs.sqldelight.runtime)
+
+            //datetime
+            implementation(libs.kotlinx.datetime)
+        }
+
+        androidMain.dependencies {
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
+
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
+            implementation(libs.koin.android)
+
+            //SqlDelight
+            implementation(libs.sqldelight.android.driver)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+
+            //SqlDelight
+            implementation(libs.sqldelight.native.driver)
         }
     }
 }
@@ -101,7 +114,16 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    sqldelight {
+        databases{
+            create("SpeedTestDatabase"){
+                packageName.set("com.speedtest")
+            }
+        }
+    }
 }
+
 
 dependencies {
     debugImplementation(compose.uiTooling)
