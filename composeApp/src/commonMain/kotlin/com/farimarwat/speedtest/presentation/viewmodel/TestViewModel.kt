@@ -46,6 +46,7 @@ class TestViewModel(
 
     fun startTest(url:String) = viewModelScope.launch(Dispatchers.IO){
         mUrl = url
+        println("MyUrl:$mUrl")
         if (mUrl.isEmpty()) return@launch
         resetTest()
 

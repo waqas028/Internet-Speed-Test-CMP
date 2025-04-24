@@ -107,8 +107,7 @@ fun HomeScreen(
                         )
                     ){
                         GoButton("Go") {
-                            val url = server?.url.toString().encodeUrl()
-                            navController.navigate("${Screen.Test.route}/$url")
+                            navController.navigate(Screen.Test.route)
                         }
 
                     }

@@ -24,6 +24,7 @@ import com.farimarwat.speedtest.domain.model.STServer
 import com.farimarwat.speedtest.presentation.component.NetworkMetricItem
 import com.farimarwat.speedtest.presentation.component.SpeedItem
 import com.farimarwat.speedtest.presentation.component.SpeedMeter
+import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
@@ -35,17 +36,20 @@ import speedtest.composeapp.generated.resources.ic_ping
 
 @Composable
 fun TestScreen(
-    url:String,
-    viewModel: TestViewModel,
+    homeViewModel: HomeViewModel,
+    testViewModel: TestViewModel,
     navController: NavHostController
     ){
     LaunchedEffect(Unit){
         delay(500)
-        viewModel.startTest(url)
+        val url = homeViewModel.selectedServer.value?.url
+        url?.let {
+            testViewModel.startTest(url)
+        }
     }
-    val currentSpeed by viewModel.currentSpeed.collectAsStateWithLifecycle()
-    val downloadTestStatus by viewModel.downloadTestStatus.collectAsStateWithLifecycle()
-    val uploadTestStatus by viewModel.uploadTestStatus.collectAsStateWithLifecycle()
+    val currentSpeed by testViewModel.currentSpeed.collectAsStateWithLifecycle()
+    val downloadTestStatus by testViewModel.downloadTestStatus.collectAsStateWithLifecycle()
+    val uploadTestStatus by testViewModel.uploadTestStatus.collectAsStateWithLifecycle()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -83,7 +87,7 @@ fun TestScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
-                    val latencyResult by viewModel.pingResult.collectAsStateWithLifecycle()
+                    val latencyResult by testViewModel.pingResult.collectAsStateWithLifecycle()
 
                     NetworkMetricItem(
                         modifier = Modifier

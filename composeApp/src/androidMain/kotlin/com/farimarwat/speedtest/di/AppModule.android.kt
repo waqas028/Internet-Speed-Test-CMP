@@ -1,5 +1,8 @@
 package com.farimarwat.speedtest.di
 
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import com.speedtest.SpeedTestDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -13,6 +16,11 @@ import org.koin.dsl.module
 
 actual val platFormModule = module {
     singleOf(::httpClient)
+    single<SqlDriver>{
+        AndroidSqliteDriver(
+            SpeedTestDatabase.Schema,get(),"speedtest.db"
+        )
+    }
 }
 actual val httpClient: HttpClient =
     HttpClient(OkHttp){
@@ -23,8 +31,8 @@ actual val httpClient: HttpClient =
         }
         install(WebSockets)
         install(HttpTimeout) {
-            requestTimeoutMillis = 30_000
-            connectTimeoutMillis = 30_000
-            socketTimeoutMillis = 30_000
+            requestTimeoutMillis = 10_000
+            connectTimeoutMillis = 10_000
+            socketTimeoutMillis = 10_000
         }
     }

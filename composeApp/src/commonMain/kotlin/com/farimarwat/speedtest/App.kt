@@ -42,13 +42,11 @@ fun App(
                 )
             }
             composable(
-                route = "${Screen.Test.route}/{url}",
-                arguments = listOf(navArgument("url"){type = NavType.StringType})
+                route = Screen.Test.route,
             ){ backStackEntry ->
-
                 TestScreen(
-                    url = backStackEntry.arguments?.getString("url").toString().decodeUrl(),
-                    viewModel = testViewModel,
+                    testViewModel = testViewModel,
+                    homeViewModel = homeViewModel,
                     navController = navController
                 )
             }
