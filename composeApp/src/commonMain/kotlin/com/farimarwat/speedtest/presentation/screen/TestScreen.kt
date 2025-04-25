@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -76,6 +77,7 @@ fun TestScreen(
         when(overallTestStatus){
             is OverallTestStatus.Finished -> {
                 testFinished = true
+
                 val error = (overallTestStatus as OverallTestStatus.Finished).error
                 if(error != null){
                     showError = true
@@ -113,7 +115,7 @@ fun TestScreen(
                         navController.navigateUp()
                     }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Default.Close,
                             contentDescription = "Back"
                         )
                     }

@@ -88,6 +88,7 @@ kotlin {
             implementation(libs.sqldelight.native.driver)
         }
     }
+
 }
 
 android {

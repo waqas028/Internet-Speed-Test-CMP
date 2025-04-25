@@ -60,7 +60,7 @@ class TestViewModel(
         testDownloadJob?.cancel()
         //NetworkMeasure
         val exception = CoroutineExceptionHandler{_, throwable ->
-            _overAllTestStatus.value = OverallTestStatus.Finished(Exception(throwable.message))
+            //_overAllTestStatus.value = OverallTestStatus.Finished(Exception(throwable.message))
         }
         supervisorScope {
             testLatencyMeasureJob = launch(exception) {
@@ -119,7 +119,6 @@ class TestViewModel(
                 _currentSpeed.value = currentSpeed
             }
         )
-        println("FinalUploadSpeed: $finalSpeed")
         _uploadTestStatus.value = _uploadTestStatus.value.copy(
             isTestRunning = false,
             isTestCompleted = true,
@@ -136,6 +135,7 @@ class TestViewModel(
             downSpeed = downloadTestStatus.value.speed,
             upSpeed = uploadTestStatus.value.speed
         )
+        _overAllTestStatus.value = OverallTestStatus.Idle
     }
     fun resetTest(){
         _pingResult.value = PingResult(0,0,0.0f)
