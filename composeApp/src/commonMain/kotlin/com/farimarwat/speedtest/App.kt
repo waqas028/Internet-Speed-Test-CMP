@@ -132,11 +132,13 @@ fun App(
                     TestScreen(
                         testViewModel = testViewModel,
                         homeViewModel = homeViewModel,
-                        navController = navController
+                        navController = navController,
+                        modifier = modifier
                     )
                 }
                 composable(Screen.History.route) {
                     HistoryScreen(
+                        navController = navController,
                         historyScreenViewModel = historyScreenViewModel,
                         modifier = modifier
                     )
