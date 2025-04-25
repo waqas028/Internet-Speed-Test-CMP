@@ -7,10 +7,13 @@ import com.farimarwat.speedtest.core.DownloadSpeedTester
 import com.farimarwat.speedtest.core.PingResult
 import com.farimarwat.speedtest.core.UploadSpeedTester
 import com.farimarwat.speedtest.core.WebSocketPingMeasurer
+import com.farimarwat.speedtest.domain.model.STProvider
+import com.farimarwat.speedtest.domain.model.STServer
 import com.farimarwat.speedtest.domain.model.SpeedTest
 import com.farimarwat.speedtest.presentation.status.TestStatus
 import com.farimarwat.speedtest.domain.usecase.InsertTestSpeedUseCase
 import com.farimarwat.speedtest.presentation.status.OverallTestStatus
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
@@ -56,13 +59,16 @@ class TestViewModel(
         testLatencyMeasureJob?.cancel()
         testDownloadJob?.cancel()
         //NetworkMeasure
+        val exception = CoroutineExceptionHandler{_, throwable ->
+            _overAllTestStatus.value = OverallTestStatus.Finished(Exception(throwable.message))
+        }
         supervisorScope {
-            testLatencyMeasureJob = launch {
+            testLatencyMeasureJob = launch(exception) {
                 testLatency()
             }
-            testDownloadJob = launch {
+            testDownloadJob = launch(exception) {
                 testDownload()
-                testUploadJob = launch {
+                testUploadJob = launch(exception) {
                     delay(1000)
                     testUpload()
                 }
@@ -120,11 +126,16 @@ class TestViewModel(
             speed = finalSpeed
         )
         _currentSpeed.value = 0.0
-        _overAllTestStatus.value = OverallTestStatus.Finished
+        _overAllTestStatus.value = OverallTestStatus.Finished(null)
     }
 
-    fun insertSpeedTest(speedTest: SpeedTest) = viewModelScope.launch(Dispatchers.IO) {
-        insertTestSpeedUseCase(speedTest)
+    fun insertSpeedTest(stProvider: STProvider, stServer: STServer) = viewModelScope.launch(Dispatchers.IO) {
+        insertTestSpeedUseCase(
+            stProvider = stProvider,
+            stServer = stServer,
+            downSpeed = downloadTestStatus.value.speed,
+            upSpeed = uploadTestStatus.value.speed
+        )
     }
     fun resetTest(){
         _pingResult.value = PingResult(0,0,0.0f)

@@ -13,6 +13,7 @@ import com.farimarwat.speedtest.data.local.SpeedTestDataSource
 import com.farimarwat.speedtest.data.repository.SpeedTestRepositoryImpl
 import com.farimarwat.speedtest.domain.repository.SpeedTestRepository
 import com.farimarwat.speedtest.domain.usecase.GetAllTestSpeedUseCase
+import com.farimarwat.speedtest.domain.usecase.InsertTestSpeedUseCase
 import com.farimarwat.speedtest.presentation.screen.SettingsScreen
 import com.farimarwat.speedtest.presentation.viewmodel.HistoryScreenViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.SettingsScreenViewModel
@@ -27,12 +28,18 @@ val sharedModule = module {
     singleOf(::ServersApi)
     singleOf(::ServersRepositoryImpl).bind<ServersRepository>()
     singleOf(::SpeedTestRepositoryImpl).bind<SpeedTestRepository>()
-    singleOf(::FetchServersUseCase)
     singleOf(::WebSocketPingMeasurer)
     singleOf(::DownloadSpeedTester)
     singleOf(::UploadSpeedTester)
     singleOf(::SpeedTestDataSource)
+
+    //usecases
+    singleOf(::FetchServersUseCase)
     singleOf(::GetAllTestSpeedUseCase)
+    singleOf(::InsertTestSpeedUseCase)
+    singleOf(::GetAllTestSpeedUseCase)
+
+    //viewmodels
     viewModelOf(::HomeViewModel)
     viewModelOf(::TestViewModel)
     viewModelOf(::HistoryScreenViewModel)

@@ -35,33 +35,28 @@ class DownloadSpeedTester(private val client: HttpClient) {
             val url = fileUrls[currentUrlIndex % fileUrls.size]
             currentUrlIndex++
 
-            try {
-                client.prepareGet(url).execute { response ->
-                    val channel = response.bodyAsChannel()
-                    val buffer = ByteArray(DEFAULT_HTTP_BUFFER_SIZE)
-                    var bytesRead: Int
+            client.prepareGet(url).execute { response ->
+                val channel = response.bodyAsChannel()
+                val buffer = ByteArray(DEFAULT_HTTP_BUFFER_SIZE)
+                var bytesRead: Int
 
-                    while (
-                        channel.readAvailable(buffer).also { bytesRead = it } >= 0 &&
-                        elapsedTime < testDuration
-                    ) {
-                        totalBytes += bytesRead
-                        elapsedTime = startTime.elapsedNow()
+                while (
+                    channel.readAvailable(buffer).also { bytesRead = it } >= 0 &&
+                    elapsedTime < testDuration
+                ) {
+                    totalBytes += bytesRead
+                    elapsedTime = startTime.elapsedNow()
 
-                        // Instantaneous speed calculation
-                        val timeSinceLast = lastTimestamp.elapsedNow()
-                        if (timeSinceLast >= 100.milliseconds) {
-                            val bytesInInterval = totalBytes - lastBytes
-                            val speedMbps = (bytesInInterval * 8 / (timeSinceLast.inWholeMilliseconds / 1000.0)) / 1_000_000.0
-                            onProgress(speedMbps)
-                            lastBytes = totalBytes
-                            lastTimestamp = TimeSource.Monotonic.markNow()
-                        }
+                    // Instantaneous speed calculation
+                    val timeSinceLast = lastTimestamp.elapsedNow()
+                    if (timeSinceLast >= 100.milliseconds) {
+                        val bytesInInterval = totalBytes - lastBytes
+                        val speedMbps = (bytesInInterval * 8 / (timeSinceLast.inWholeMilliseconds / 1000.0)) / 1_000_000.0
+                        onProgress(speedMbps)
+                        lastBytes = totalBytes
+                        lastTimestamp = TimeSource.Monotonic.markNow()
                     }
                 }
-            } catch (e: Exception) {
-                println("Error during download: $e")
-                return 0.0
             }
         }
 

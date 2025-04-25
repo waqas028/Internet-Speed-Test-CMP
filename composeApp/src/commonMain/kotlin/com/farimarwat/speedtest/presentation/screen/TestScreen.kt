@@ -14,6 +14,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,12 +26,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.farimarwat.speedtest.domain.model.STServer
+import com.farimarwat.speedtest.presentation.component.ErrorMessageWithRetry
 import com.farimarwat.speedtest.presentation.component.NetworkMetricItem
 import com.farimarwat.speedtest.presentation.component.SpeedItem
 import com.farimarwat.speedtest.presentation.component.SpeedMeter
+import com.farimarwat.speedtest.presentation.status.OverallTestStatus
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import speedtest.composeapp.generated.resources.Res
 import speedtest.composeapp.generated.resources.arrow_down_circle
@@ -41,6 +48,7 @@ fun TestScreen(
     testViewModel: TestViewModel,
     navController: NavHostController
     ){
+    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit){
         delay(500)
         val url = homeViewModel.selectedServer.value?.url
@@ -48,99 +56,145 @@ fun TestScreen(
             testViewModel.startTest(url)
         }
     }
-    val isTesting by testViewModel.isTesting.collectAsStateWithLifecycle()
-    LaunchedEffect(isTesting){
-        if(isTesting){
-
-        }
-    }
     val currentSpeed by testViewModel.currentSpeed.collectAsStateWithLifecycle()
     val downloadTestStatus by testViewModel.downloadTestStatus.collectAsStateWithLifecycle()
     val uploadTestStatus by testViewModel.uploadTestStatus.collectAsStateWithLifecycle()
+
+    val overallTestStatus by testViewModel.overallTestStatus.collectAsStateWithLifecycle()
+    var showError by remember { mutableStateOf(false) }
+    var testFinished by remember { mutableStateOf(false) }
+
+    LaunchedEffect(overallTestStatus){
+        when(overallTestStatus){
+            is OverallTestStatus.Finished -> {
+                testFinished = true
+                val error = (overallTestStatus as OverallTestStatus.Finished).error
+                if(error != null){
+                    showError = true
+                } else {
+                    if(homeViewModel.selectedProvider.value != null
+                        && homeViewModel.selectedServer.value != null){
+                        testViewModel
+                            .insertSpeedTest(
+                                stProvider = homeViewModel.selectedProvider.value!!,
+                                stServer = homeViewModel.selectedServer.value!!
+                            )
+                    }
+                }
+            }
+            OverallTestStatus.Idle -> {
+
+            }
+            OverallTestStatus.Running -> {
+
+            }
+        }
+    }
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ){
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Column {
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ){
-                    SpeedItem(
-                        label = "Download",
-                        icon = painterResource(Res.drawable.arrow_down_circle),
-                        iconColor = MaterialTheme.colorScheme.secondary,
-                        status = downloadTestStatus
-                    )
-                    SpeedItem(
-                        label = "Upload",
-                        icon = painterResource(Res.drawable.arrow_up_circle),
-                        iconColor = MaterialTheme.colorScheme.tertiary,
-                        status = uploadTestStatus
-                    )
+        //If error
+
+        if(showError){
+           ErrorMessageWithRetry(
+               message = (overallTestStatus as OverallTestStatus.Finished).error?.message.toString(),
+               onRetry = {
+                  scope.launch {
+                      showError = false
+                      val url = homeViewModel.selectedServer.value?.url
+                      url?.let {
+                          testViewModel.startTest(url)
+                      }
+                  }
+               }
+           )
+        }
+        //else
+        else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Column {
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ){
+                        SpeedItem(
+                            label = "Download",
+                            icon = painterResource(Res.drawable.arrow_down_circle),
+                            iconColor = MaterialTheme.colorScheme.secondary,
+                            status = downloadTestStatus
+                        )
+                        SpeedItem(
+                            label = "Upload",
+                            icon = painterResource(Res.drawable.arrow_up_circle),
+                            iconColor = MaterialTheme.colorScheme.tertiary,
+                            status = uploadTestStatus
+                        )
+                    }
+
+                    Row (
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ){
+                        val latencyResult by testViewModel.pingResult.collectAsStateWithLifecycle()
+
+                        NetworkMetricItem(
+                            modifier = Modifier
+                                .weight(0.5f),
+                            title = "Ping",
+                            value = "${latencyResult.averagePingMs}",
+                            icon = {
+                                Icon(
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    painter = painterResource(Res.drawable.ic_ping),
+                                    contentDescription = "Jitter",
+                                    tint = MaterialTheme.colorScheme.tertiary
+                                )
+                            }
+                        )
+                        NetworkMetricItem(
+                            modifier = Modifier
+                                .weight(0.5f),
+                            title = "Jitter",
+                            value = "${latencyResult.jitterMs}",
+                            icon = {
+                                Icon(
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    painter = painterResource(Res.drawable.ic_jitter),
+                                    contentDescription = "Jitter",
+                                    tint = MaterialTheme.colorScheme.secondary
+                                )
+                            }
+                        )
+                    }
                 }
 
-                Row (
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ){
-                    val latencyResult by testViewModel.pingResult.collectAsStateWithLifecycle()
-
-                    NetworkMetricItem(
-                        modifier = Modifier
-                            .weight(0.5f),
-                        title = "Ping",
-                        value = "${latencyResult.averagePingMs}",
-                        icon = {
-                            Icon(
-                                modifier = Modifier
-                                    .size(20.dp),
-                                painter = painterResource(Res.drawable.ic_ping),
-                                contentDescription = "Jitter",
-                                tint = MaterialTheme.colorScheme.tertiary
-                            )
-                        }
-                    )
-                    NetworkMetricItem(
-                        modifier = Modifier
-                            .weight(0.5f),
-                        title = "Jitter",
-                        value = "${latencyResult.jitterMs}",
-                        icon = {
-                            Icon(
-                                modifier = Modifier
-                                    .size(20.dp),
-                                painter = painterResource(Res.drawable.ic_jitter),
-                                contentDescription = "Jitter",
-                                tint = MaterialTheme.colorScheme.secondary
-                            )
-                        }
-                    )
-                }
+                SpeedMeter(
+                    modifier = Modifier.size(300.dp),
+                    backgroundColor = MaterialTheme.colorScheme.background,
+                    progressWidth = 50f,
+                    progress = currentSpeed.toFloat() ,
+                    needleColors = listOf(Color.Black,Color.White),
+                    needleKnobColors = listOf(Color.Black,Color.Gray),
+                    needleKnobSize = 20f,
+                    progressColors = listOf(Color.Red, Color.Yellow),
+                    labelColor = Color.White,
+                    unitText = "Mbps"
+                )
             }
-
-            SpeedMeter(
-                modifier = Modifier.size(300.dp),
-                backgroundColor = MaterialTheme.colorScheme.background,
-                progressWidth = 50f,
-                progress = currentSpeed.toFloat() ,
-                needleColors = listOf(Color.Black,Color.White),
-                needleKnobColors = listOf(Color.Black,Color.Gray),
-                needleKnobSize = 20f,
-                progressColors = listOf(Color.Red, Color.Yellow),
-                labelColor = Color.White,
-                unitText = "Mbps"
-            )
         }
     }
 }

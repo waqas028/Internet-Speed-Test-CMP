@@ -34,25 +34,20 @@ class UploadSpeedTester(private val client: HttpClient) {
         val payload = ByteArray(32 * 1024) { 1 }
 
         while (elapsedTime < testDuration) {
-            try {
-                client.post(uploadUrl) {
-                    setBody(payload)
-                }
-                totalBytesSent += payload.size
-                elapsedTime = startTime.elapsedNow()
+            client.post(uploadUrl) {
+                setBody(payload)
+            }
+            totalBytesSent += payload.size
+            elapsedTime = startTime.elapsedNow()
 
-                // Instantaneous speed calculation
-                val timeSinceLast = lastTimestamp.elapsedNow()
-                if (timeSinceLast >= 100.milliseconds) {
-                    val bytesInInterval = totalBytesSent - lastBytesSent
-                    val speedMbps = (bytesInInterval * 8 / (timeSinceLast.inWholeMilliseconds / 1000.0)) / 1_000_000.0
-                    onProgress(speedMbps)
-                    lastBytesSent = totalBytesSent
-                    lastTimestamp = TimeSource.Monotonic.markNow()
-                }
-            } catch (e: Exception) {
-                println("Error during upload: $e")
-                return 0.0
+            // Instantaneous speed calculation
+            val timeSinceLast = lastTimestamp.elapsedNow()
+            if (timeSinceLast >= 100.milliseconds) {
+                val bytesInInterval = totalBytesSent - lastBytesSent
+                val speedMbps = (bytesInInterval * 8 / (timeSinceLast.inWholeMilliseconds / 1000.0)) / 1_000_000.0
+                onProgress(speedMbps)
+                lastBytesSent = totalBytesSent
+                lastTimestamp = TimeSource.Monotonic.markNow()
             }
         }
 

@@ -15,23 +15,20 @@ import kotlin.time.TimeSource
 class WebSocketPingMeasurer(private val client: HttpClient) {
     private val timeSource = TimeSource.Monotonic
 
+    @Throws(Exception::class)
     suspend fun measurePing(
         host: String = URL02,
         count: Int = 4,
-        timeout: Long = 2000L
+        timeout: Long = 2000L,
+        onError:(Exception)->Unit = {}
     ): PingResult {
         val timings = mutableListOf<Long>()
         var successCount = 0
 
         repeat(count) {
-            try {
-                val duration = measureSinglePing(host, timeout)
-                timings.add(duration)
-                successCount++
-                println("Ping #${it+1}: $duration ms")
-            } catch (e: Exception) {
-                println("Ping attempt failed: ${e.message?.take(200)}")
-            }
+            val duration = measureSinglePing(host, timeout)
+            timings.add(duration)
+            successCount++
             if (it < count - 1) delay(300) // No delay after last attempt
         }
 
