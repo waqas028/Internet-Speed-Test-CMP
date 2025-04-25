@@ -26,10 +26,13 @@ import com.farimarwat.speedtest.domain.model.SpeedTest
 import com.farimarwat.speedtest.utils.to2DecimalString
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
 import speedtest.composeapp.generated.resources.Res
 import speedtest.composeapp.generated.resources.arrow_down_circle
 import speedtest.composeapp.generated.resources.arrow_up_circle
+import speedtest.composeapp.generated.resources.ic_map_pin
 
 @Composable
 fun SpeedTestCard(
@@ -75,7 +78,7 @@ fun SpeedTestCard(
                     modifier = Modifier.size(40.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.PlayArrow,
+                        painter = painterResource(Res.drawable.ic_map_pin),
                         contentDescription = "View on map",
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -104,7 +107,7 @@ fun SpeedTestCard(
 
             // Timestamp
             Text(
-                text = "Tested at ${test.performedAt}",
+                text = "Tested at ${test.performedAt.toFormattedString()}",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.outline,
                 modifier = Modifier.align(Alignment.End)
@@ -145,4 +148,30 @@ private fun SpeedIndicator(
         )
     }
 }
+// In commonMain/kotlin/utils/DateTimeExtensions.kt
+fun Instant.toFormattedString(): String {
+    val localDateTime = this.toLocalDateTime(TimeZone.currentSystemDefault())
+    return "${localDateTime.month.name.take(3)} ${localDateTime.dayOfMonth}, " +
+            "${localDateTime.hour.toString().padStart(2, '0')}:" +
+            "${localDateTime.minute.toString().padStart(2, '0')} " +
+            if (localDateTime.hour < 12) "AM" else "PM"
+}
+
+// Alternative using multiplatform libraries (if you need more formatting options)
+@OptIn(ExperimentalStdlibApi::class)
+fun Instant.toFormattedStringAdvanced(): String {
+    val localDateTime = this.toLocalDateTime(TimeZone.currentSystemDefault())
+    return buildString {
+        append(localDateTime.month.name.take(3))
+        append(" ")
+        append(localDateTime.dayOfMonth)
+        append(", ")
+        append(localDateTime.hour % 12)
+        append(":")
+        append(localDateTime.minute.toString().padStart(2, '0'))
+        append(" ")
+        append(if (localDateTime.hour < 12) "AM" else "PM")
+    }
+}
+
 

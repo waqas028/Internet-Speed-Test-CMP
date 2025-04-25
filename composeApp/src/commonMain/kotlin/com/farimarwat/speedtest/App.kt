@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -111,6 +112,8 @@ fun App(
             }
         ) { innerPadding ->
 
+            val modifier = Modifier
+                .padding(innerPadding)
             NavHost(
                 navController = navController,
                 startDestination = Screen.Home.route
@@ -134,7 +137,8 @@ fun App(
                 }
                 composable(Screen.History.route) {
                     HistoryScreen(
-                        historyScreenViewModel = historyScreenViewModel
+                        historyScreenViewModel = historyScreenViewModel,
+                        modifier = modifier
                     )
                 }
                 composable(Screen.Settings.route) {

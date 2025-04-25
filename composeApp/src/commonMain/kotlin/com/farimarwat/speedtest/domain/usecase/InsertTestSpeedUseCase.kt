@@ -16,7 +16,7 @@ class InsertTestSpeedUseCase(private val repository: SpeedTestRepository) {
         repository.insertSpeedTestEntity(
             SpeedTest(
                 providerName = stProvider.providerName ?: "Unknown",
-                serverName = stServer.name ?: "Unknown",
+                serverName = stServer.sponsor ?: "Unknown",
                 providerLat = stProvider.lat?.toDouble() ?: 0.0,
                 providerLon = stProvider.lat?.toDouble() ?: 0.0,
                 serverLat = stServer.lat?.toDouble() ?: 0.0,
