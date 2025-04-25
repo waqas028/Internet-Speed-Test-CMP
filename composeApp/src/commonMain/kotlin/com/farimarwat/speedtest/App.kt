@@ -89,7 +89,7 @@ fun App(
                 ){
                     NavigationBar {
                         var selected by remember { mutableStateOf(0) }
-                        list.forEachIndexed { index,item ->
+                        list.forEach{ item ->
                             NavigationBarItem(
                                 label = { Text(item.title) },
                                 icon = {
@@ -100,9 +100,8 @@ fun App(
                                         contentDescription = item.title
                                     )
                                 },
-                                selected = selected == index,
+                                selected = route == item.route,
                                 onClick = {
-                                    selected = index
                                     navController.navigate(item.route)
                                 }
                             )
