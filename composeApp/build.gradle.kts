@@ -80,6 +80,9 @@ kotlin {
 
             //SqlDelight
             implementation(libs.sqldelight.android.driver)
+
+            //Admob
+            implementation(libs.play.services.ads)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

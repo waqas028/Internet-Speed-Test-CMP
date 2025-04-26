@@ -33,6 +33,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.farimarwat.speedtest.domain.model.STServer
+import com.farimarwat.speedtest.feature.ad.AdColors
+import com.farimarwat.speedtest.feature.ad.SquareNativeAd
 import com.farimarwat.speedtest.presentation.component.ErrorMessageWithRetry
 import com.farimarwat.speedtest.presentation.component.NetworkMetricItem
 import com.farimarwat.speedtest.presentation.component.SpeedItem
@@ -56,9 +58,9 @@ fun TestScreen(
     testViewModel: TestViewModel,
     navController: NavHostController,
     modifier: Modifier
-    ){
+) {
     val scope = rememberCoroutineScope()
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         delay(500)
         val url = homeViewModel.selectedServer.value?.url
         url?.let {
@@ -73,17 +75,18 @@ fun TestScreen(
     var showError by remember { mutableStateOf(false) }
     var testFinished by remember { mutableStateOf(false) }
 
-    LaunchedEffect(overallTestStatus){
-        when(overallTestStatus){
+    LaunchedEffect(overallTestStatus) {
+        when (overallTestStatus) {
             is OverallTestStatus.Finished -> {
                 testFinished = true
 
                 val error = (overallTestStatus as OverallTestStatus.Finished).error
-                if(error != null){
+                if (error != null) {
                     showError = true
                 } else {
-                    if(homeViewModel.selectedProvider.value != null
-                        && homeViewModel.selectedServer.value != null){
+                    if (homeViewModel.selectedProvider.value != null
+                        && homeViewModel.selectedServer.value != null
+                    ) {
                         testViewModel
                             .insertSpeedTest(
                                 stProvider = homeViewModel.selectedProvider.value!!,
@@ -92,9 +95,11 @@ fun TestScreen(
                     }
                 }
             }
+
             OverallTestStatus.Idle -> {
 
             }
+
             OverallTestStatus.Running -> {
 
             }
@@ -106,7 +111,7 @@ fun TestScreen(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
-    ){
+    ) {
         Column {
             TopAppBar(
                 title = { Text("Test") },
@@ -122,7 +127,7 @@ fun TestScreen(
                 }
             )
             //If error
-            if(showError){
+            if (showError) {
                 ErrorMessageWithRetry(
                     message = (overallTestStatus as OverallTestStatus.Finished).error?.message.toString(),
                     onRetry = {
@@ -140,15 +145,15 @@ fun TestScreen(
             else {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Column {
-                        Row (
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
-                        ){
+                        ) {
                             SpeedItem(
                                 label = "Download",
                                 icon = painterResource(Res.drawable.arrow_down_circle),
@@ -163,12 +168,12 @@ fun TestScreen(
                             )
                         }
 
-                        Row (
+                        Row(
                             modifier = Modifier
                                 .padding(4.dp)
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
-                        ){
+                        ) {
                             val latencyResult by testViewModel.pingResult.collectAsStateWithLifecycle()
 
                             NetworkMetricItem(
@@ -208,13 +213,23 @@ fun TestScreen(
                         modifier = Modifier.size(300.dp),
                         backgroundColor = MaterialTheme.colorScheme.background,
                         progressWidth = 50f,
-                        progress = currentSpeed.toFloat() ,
-                        needleColors = listOf(Color.Black,Color.White),
-                        needleKnobColors = listOf(Color.Black,Color.Gray),
+                        progress = currentSpeed.toFloat(),
+                        needleColors = listOf(Color.Black, Color.White),
+                        needleKnobColors = listOf(Color.Black, Color.Gray),
                         needleKnobSize = 20f,
                         progressColors = listOf(Color.Red, Color.Yellow),
                         labelColor = Color.White,
                         unitText = "Mbps"
+                    )
+
+                    SquareNativeAd(
+                        modifier = Modifier.fillMaxSize(),
+                        adUnitId = "ca-app-pub-3940256099942544/2247696110",
+                        adColors = AdColors(
+                            adBackground = MaterialTheme.colorScheme.background,
+                            headlineText = MaterialTheme.colorScheme.primary,
+                            bodyText = MaterialTheme.colorScheme.secondary
+                        )
                     )
                 }
             }
