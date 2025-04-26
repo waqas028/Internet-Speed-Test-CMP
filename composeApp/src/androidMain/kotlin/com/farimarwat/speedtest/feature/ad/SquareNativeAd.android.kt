@@ -42,6 +42,8 @@ actual fun SquareNativeAd(modifier: Modifier,
                         .setTextColor(adColors.headlineText.toArgb())
                     findViewById<TextView>(R.id.ad_body)
                         .setTextColor(colors.bodyText.toArgb())
+                    findViewById<TextView>(R.id.adBadge)
+                        .setTextColor(colors.badgeText.toArgb())
                 }
             }
 

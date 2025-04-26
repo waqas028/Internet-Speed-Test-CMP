@@ -57,7 +57,7 @@
 
            <FrameLayout
                android:layout_width="match_parent"
-               android:layout_height="wrap_content">
+               android:layout_height="150dp">
 
                <!-- MediaView must be first child -->
                <com.google.android.gms.ads.nativead.MediaView
@@ -70,7 +70,7 @@
                <ImageView
                    android:id="@+id/ad_image"
                    android:layout_width="match_parent"
-                   android:layout_height="150dp"
+                   android:layout_height="wrap_content"
                    android:visibility="gone"
                    />
            </FrameLayout>
