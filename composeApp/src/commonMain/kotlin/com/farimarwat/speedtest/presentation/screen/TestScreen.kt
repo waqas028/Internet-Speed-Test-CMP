@@ -40,6 +40,7 @@ import androidx.navigation.NavHostController
 import com.farimarwat.speedtest.domain.model.STServer
 import com.farimarwat.speedtest.feature.ad.AdColors
 import com.farimarwat.speedtest.feature.ad.SquareNativeAd
+import com.farimarwat.speedtest.feature.ad.rememberNativeAdController
 import com.farimarwat.speedtest.presentation.component.ErrorMessageWithRetry
 import com.farimarwat.speedtest.presentation.component.NetworkMetricItem
 import com.farimarwat.speedtest.presentation.component.SpeedItem
@@ -81,6 +82,11 @@ fun TestScreen(
     var testFinished by remember { mutableStateOf(false) }
     var showSpeedMeter by remember { mutableStateOf(true) }
     var showAd by remember { mutableStateOf(false) }
+
+    val adController = rememberNativeAdController("ca-app-pub-3940256099942544/2247696110")
+    LaunchedEffect(Unit) {
+        adController.loadAd()
+    }
 
     LaunchedEffect(overallTestStatus) {
         scope.launch {
@@ -249,10 +255,12 @@ fun TestScreen(
                     ) {
                         Column(
                             modifier = Modifier
+                                .padding(top = 16.dp)
                                 .padding(horizontal = 4.dp)
                         ) {
                             Button(
                                 modifier = Modifier
+                                    .padding(bottom = 16.dp)
                                     .fillMaxWidth(),
                                 onClick = {
                                     scope.launch {
@@ -268,20 +276,22 @@ fun TestScreen(
                                 )
                             ) {
                                 Text(
-                                    text = "Re-Test"
+                                    text = "ReTest"
                                 )
                             }
+
                             SquareNativeAd(
                                 modifier = Modifier.fillMaxWidth(),
-                                adUnitId = "ca-app-pub-3940256099942544/2247696110",
+                                nativeAdController = adController,
                                 adColors = AdColors(
                                     adBackground = MaterialTheme.colorScheme.background,
                                     headlineText = MaterialTheme.colorScheme.primary,
                                     bodyText = MaterialTheme.colorScheme.secondary,
-                                    badgeText = Color.White
+                                    badgeText = Color.White,
+                                    buttonBackground = MaterialTheme.colorScheme.secondary,
+                                    buttonText = MaterialTheme.colorScheme.onSecondaryContainer
                                 )
                             )
-
                         }
                     }
                 }

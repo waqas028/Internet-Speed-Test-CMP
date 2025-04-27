@@ -76,8 +76,6 @@ class NativeAdControllerAndroid(
                 (adView.iconView as? ImageView)?.setImageDrawable(ad.icon?.drawable)
                 adView.iconView?.visibility = View.VISIBLE
             }
-
-
             // Hide both initially
             mediaView.visibility = View.GONE
             imageView.visibility = View.GONE
@@ -114,7 +112,4 @@ actual fun rememberNativeAdController(adUnitId: String): NativeAdController {
             adUnitId = adUnitId
         )
     }
-}
-fun Int.dpToPx(context: Context): Int {
-    return (this * context.resources.displayMetrics.density).toInt()
 }

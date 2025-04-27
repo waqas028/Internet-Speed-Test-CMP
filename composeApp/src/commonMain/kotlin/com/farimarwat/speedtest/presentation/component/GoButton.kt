@@ -41,10 +41,7 @@ fun GoButton(label:String = "GO", onClick:()->Unit={}){
         }
         Image(
             modifier = Modifier
-                .fillMaxSize()
-                .clickable {
-                    onClick()
-                },
+                .fillMaxSize(),
             painter = rememberLottiePainter(
                 composition = composition,
                 iterations = Compottie.IterateForever
@@ -54,6 +51,9 @@ fun GoButton(label:String = "GO", onClick:()->Unit={}){
         )
         Text(
             modifier = Modifier
+                .clickable {
+                    onClick()
+                }
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
                 .padding(16.dp),

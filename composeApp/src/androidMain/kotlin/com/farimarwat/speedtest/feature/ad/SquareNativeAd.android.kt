@@ -2,6 +2,7 @@ package com.farimarwat.speedtest.feature.ad
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,14 +16,9 @@ import com.google.android.gms.ads.nativead.NativeAdView
 
 @Composable
 actual fun SquareNativeAd(modifier: Modifier,
-                          adUnitId: String,
+                          nativeAdController: NativeAdController,
                           adColors: AdColors?
 ) {
-    val adController = rememberNativeAdController(adUnitId)
-
-    LaunchedEffect(Unit) {
-        adController.loadAd()
-    }
 
     AndroidView(
         modifier = modifier,
@@ -44,15 +40,16 @@ actual fun SquareNativeAd(modifier: Modifier,
                         .setTextColor(colors.bodyText.toArgb())
                     findViewById<TextView>(R.id.adBadge)
                         .setTextColor(colors.badgeText.toArgb())
+                    findViewById<Button>(R.id.ad_actionbutton)
+                        .setBackgroundColor(colors.buttonBackground.toArgb())
                 }
             }
 
-            adController.showAd(adView) // Show the ad immediately
+            nativeAdController.showAd(adView)
             adView
         },
         update = { view ->
-            // Optional: If needed, re-bind ad here when recomposed
-            adController.showAd(view)
+            nativeAdController.showAd(view)
         }
     )
 }
