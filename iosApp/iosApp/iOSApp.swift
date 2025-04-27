@@ -2,7 +2,9 @@ import SwiftUI
 
 @main
 struct iOSApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    init(){
+    GADMobileAds.shared.start(completionHandler: nil)
+    }
     var body: some Scene {
         WindowGroup {
             ContentView()
