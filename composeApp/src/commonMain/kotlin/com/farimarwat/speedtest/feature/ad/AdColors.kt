@@ -9,5 +9,6 @@ data class AdColors(
     val buttonText:Color = Color.Black,
     val buttonBackground:Color = Color.Yellow,
     val badgeText:Color = Color.White,
+    val badgeBackground:Color = Color.Gray,
     val adBackground:Color = Color.White
 )

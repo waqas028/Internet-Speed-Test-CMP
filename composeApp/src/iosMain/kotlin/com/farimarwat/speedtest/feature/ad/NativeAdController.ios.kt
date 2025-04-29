@@ -29,7 +29,9 @@ class NativeAdControlleriOS(
     private val rootViewController: UIViewController?
 ) : NativeAdController {
     var nativeAd by mutableStateOf<GADNativeAd?>(null)
-    private val adDelegate = MyAdLoaderDelegate()
+    private val adDelegate = MyAdLoaderDelegate{ad ->
+        nativeAd = ad
+    }
     private var adLoader: GADAdLoader? = null  // Retain the adLoader
 
     override fun loadAd() {

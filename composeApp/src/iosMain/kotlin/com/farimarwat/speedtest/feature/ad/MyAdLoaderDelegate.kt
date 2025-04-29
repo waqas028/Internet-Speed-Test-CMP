@@ -8,7 +8,9 @@ import platform.Foundation.NSError
 import platform.darwin.NSObject
 
 @OptIn(ExperimentalForeignApi::class)
-class MyAdLoaderDelegate : NSObject(), GADNativeAdLoaderDelegateProtocol {
+class MyAdLoaderDelegate(
+    private val onAdLoaded: (GADNativeAd) -> Unit = {}
+) : NSObject(), GADNativeAdLoaderDelegateProtocol {
     @ExperimentalForeignApi
     override fun adLoader(adLoader: GADAdLoader, didFailToReceiveAdWithError: NSError) {
         println(
@@ -28,6 +30,7 @@ class MyAdLoaderDelegate : NSObject(), GADNativeAdLoaderDelegateProtocol {
 
     override fun adLoader(adLoader: GADAdLoader, didReceiveNativeAd: GADNativeAd) {
         println("Ad Loader: ${didReceiveNativeAd}")
+        onAdLoaded(didReceiveNativeAd)
     }
 
 

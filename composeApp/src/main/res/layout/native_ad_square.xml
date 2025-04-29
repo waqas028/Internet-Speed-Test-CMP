@@ -92,7 +92,6 @@
            android:paddingHorizontal="16dp"
            android:paddingVertical="4dp"
            android:text="ad"
-           android:layout_gravity="end"
-           android:background="@drawable/nativead_adtext_background"/>
+           android:layout_gravity="end"/>
    </FrameLayout>
 </com.google.android.gms.ads.nativead.NativeAdView>
