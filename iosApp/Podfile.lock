@@ -1,13 +1,13 @@
 PODS:
   - composeApp (1.0):
-    - Google-Mobile-Ads-SDK (~> 12.3)
+    - Google-Mobile-Ads-SDK
   - Google-Mobile-Ads-SDK (12.3.0):
     - GoogleUserMessagingPlatform (>= 1.1)
   - GoogleUserMessagingPlatform (3.0.0)
 
 DEPENDENCIES:
   - composeApp (from `../composeApp`)
-  - Google-Mobile-Ads-SDK (~> 12.3)
+  - Google-Mobile-Ads-SDK
 
 SPEC REPOS:
   trunk:
@@ -19,10 +19,10 @@ EXTERNAL SOURCES:
     :path: "../composeApp"
 
 SPEC CHECKSUMS:
-  composeApp: db0b81f84ab1f5c1a751a9d9996ee3e3291e9987
+  composeApp: 11f229b4461f4e6742fc970460c308d03c7e4c7f
   Google-Mobile-Ads-SDK: 01b1b77e0bdba8b4027ae62e9bd52e5a95d930aa
   GoogleUserMessagingPlatform: f8d0cdad3ca835406755d0a69aa634f00e76d576
 
-PODFILE CHECKSUM: 8770e6f3d9098f9efa553baa4a59e4a4230caaf3
+PODFILE CHECKSUM: 2c53c0077e3af649d6bde121fb10b2143ad28c81
 
 COCOAPODS: 1.16.2

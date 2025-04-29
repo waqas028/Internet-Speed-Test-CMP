@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.kotlinCocoapods)
 }
 
 kotlin {
@@ -19,16 +20,7 @@ kotlin {
         }
     }
     
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
+
     
     sourceSets {
         commonMain.dependencies {
@@ -91,7 +83,32 @@ kotlin {
             implementation(libs.sqldelight.native.driver)
         }
     }
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+    kotlin {
 
+        cocoapods {
+            version = "1.0"
+            summary = "Compose Multiplatform Application"
+            homepage = "https://your-homepage.com"
+            ios.deploymentTarget = "14.1"
+            podfile = project.file("../iosApp/Podfile")
+
+            framework {
+                baseName = "ComposeApp"
+                isStatic = true
+                // Add these:
+                linkerOpts.add("-ObjC")
+            }
+
+            // Explicit AdMob pod configuration
+            pod("Google-Mobile-Ads-SDK") {
+                moduleName = "GoogleMobileAds"
+                extraOpts += listOf("-compiler-option","-fmodules")
+            }
+        }
+    }
 }
 
 android {

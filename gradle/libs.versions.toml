@@ -80,6 +80,8 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlin-serialization = {id = "org.jetbrains.kotlin.plugin.serialization",version.ref="kotlin"}
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
+kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+
 [bundles]
 coil = [
     "coil-compose",
