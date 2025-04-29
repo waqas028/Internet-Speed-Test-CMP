@@ -34,14 +34,24 @@ actual fun SquareNativeAd(modifier: Modifier,
                 adView.apply {
                     findViewById<NativeAdView>(R.id.nativeAdContainer)
                         .setBackgroundColor(colors.adBackground.toArgb())
+
                     findViewById<TextView>(R.id.ad_headline)
                         .setTextColor(adColors.headlineText.toArgb())
+
                     findViewById<TextView>(R.id.ad_body)
                         .setTextColor(colors.bodyText.toArgb())
+
                     findViewById<TextView>(R.id.adBadge)
                         .setTextColor(colors.badgeText.toArgb())
+                    findViewById<TextView>(R.id.adBadge)
+                        .setBackgroundColor(colors.badgeBackground.toArgb())
+
                     findViewById<Button>(R.id.ad_actionbutton)
                         .setBackgroundColor(colors.buttonBackground.toArgb())
+                    findViewById<Button>(R.id.ad_actionbutton)
+                        .setTextColor(colors.buttonText.toArgb())
+
+
                 }
             }
 
