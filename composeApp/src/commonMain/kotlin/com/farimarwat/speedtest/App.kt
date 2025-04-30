@@ -28,17 +28,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import coil3.Uri
+import com.farimarwat.speedtest.domain.model.SpeedTest
+import com.farimarwat.speedtest.feature.map.TestLocations
 import com.farimarwat.speedtest.presentation.navigation.Screen
 import com.farimarwat.speedtest.presentation.screen.HistoryScreen
 import com.farimarwat.speedtest.presentation.screen.HomeScreen
+import com.farimarwat.speedtest.presentation.screen.MapScreen
 import com.farimarwat.speedtest.presentation.screen.SettingsScreen
 import com.farimarwat.speedtest.presentation.screen.TestScreen
 import com.farimarwat.speedtest.presentation.ui.getColorScheme
 import com.farimarwat.speedtest.presentation.viewmodel.HistoryScreenViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
+import com.farimarwat.speedtest.presentation.viewmodel.MapScreenViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel
 import com.farimarwat.speedtest.utils.decodeUrl
 import io.ktor.http.decodeURLPart
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -50,7 +56,8 @@ import speedtest.composeapp.generated.resources.server
 fun App(
     homeViewModel: HomeViewModel = koinViewModel(),
     testViewModel: TestViewModel = koinViewModel(),
-    historyScreenViewModel: HistoryScreenViewModel = koinViewModel()
+    historyScreenViewModel: HistoryScreenViewModel = koinViewModel(),
+    mapScreenViewModel: MapScreenViewModel = koinViewModel()
 ) {
     MaterialTheme(
         colorScheme = getColorScheme()
@@ -139,12 +146,21 @@ fun App(
                     HistoryScreen(
                         navController = navController,
                         historyScreenViewModel = historyScreenViewModel,
+                        mapScreenViewModel = mapScreenViewModel,
                         modifier = modifier
                     )
                 }
                 composable(Screen.Settings.route) {
                     SettingsScreen()
                 }
+
+                composable(Screen.TestMap.route){
+                    MapScreen(
+                        navController = navController,
+                        mapScreenViewModel = mapScreenViewModel
+                    )
+                }
+
             }
         }
     }

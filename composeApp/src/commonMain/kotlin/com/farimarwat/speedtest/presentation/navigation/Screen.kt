@@ -9,14 +9,12 @@ import speedtest.composeapp.generated.resources.ic_settings
 sealed class Screen(
     val route:String,
     val title:String = "",
-    val icon: DrawableResource? = null,
-    val isNavigationBarItem: Boolean = false
+    val icon: DrawableResource? = null
     ) {
     object Home:Screen(
         title = "Home",
         route = "home_screen",
-        icon = Res.drawable.ic_home,
-        isNavigationBarItem = true
+        icon = Res.drawable.ic_home
     )
     object Test:Screen(
         title = "Test",
@@ -25,13 +23,15 @@ sealed class Screen(
     object History:Screen(
         title = "History",
         route = "history_screen",
-        icon = Res.drawable.ic_history,
-        isNavigationBarItem = true
+        icon = Res.drawable.ic_history
     )
     object Settings:Screen(
         title = "Settings",
         route = "settings_screen",
-        icon = Res.drawable.ic_settings,
-        isNavigationBarItem = true
+        icon = Res.drawable.ic_settings
+    )
+    object TestMap:Screen(
+        title = "Test Map",
+        route = "test_map"
     )
 }

@@ -37,8 +37,8 @@ import speedtest.composeapp.generated.resources.ic_map_pin
 @Composable
 fun SpeedTestCard(
     test: SpeedTest,
-    onMapClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onMapClicked: (SpeedTest) -> Unit = {},
 ) {
     Card(
         modifier = modifier
@@ -74,7 +74,9 @@ fun SpeedTestCard(
 
                 // Map button
                 IconButton(
-                    onClick = onMapClick,
+                    onClick = {
+                        onMapClicked(test)
+                    },
                     modifier = Modifier.size(40.dp)
                 ) {
                     Icon(

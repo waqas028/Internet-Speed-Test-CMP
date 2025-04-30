@@ -75,6 +75,11 @@ kotlin {
 
             //Admob
             implementation(libs.play.services.ads)
+
+            //Maps
+            implementation(libs.maps.compose)
+            implementation(libs.maps.compose.utils)
+            implementation(libs.play.services.maps)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -106,6 +111,14 @@ kotlin {
             pod("Google-Mobile-Ads-SDK") {
                 moduleName = "GoogleMobileAds"
                 extraOpts += listOf("-compiler-option","-fmodules")
+            }
+            pod("GoogleMaps") {
+                extraOpts += listOf("-compiler-option", "-fmodules")
+            }
+
+            pod("Google-Maps-iOS-Utils") {
+                moduleName = "GoogleMapsUtils"
+                extraOpts += listOf("-compiler-option", "-fmodules")
             }
         }
     }

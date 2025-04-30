@@ -21,14 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.farimarwat.speedtest.presentation.component.SpeedTestCard
+import com.farimarwat.speedtest.presentation.navigation.Screen
 import com.farimarwat.speedtest.presentation.viewmodel.HistoryScreenViewModel
+import com.farimarwat.speedtest.presentation.viewmodel.MapScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    historyScreenViewModel: HistoryScreenViewModel
+    historyScreenViewModel: HistoryScreenViewModel,
+    mapScreenViewModel: MapScreenViewModel
 ) {
     LaunchedEffect(Unit) {
         historyScreenViewModel.listSpeedTests()
@@ -59,7 +62,10 @@ fun HistoryScreen(
                         it.id
                     }
                 ) {
-                    SpeedTestCard(it)
+                    SpeedTestCard(it){
+                        mapScreenViewModel.setSpeedTest(it)
+                        navController.navigate(Screen.TestMap.route)
+                    }
                 }
             }
         }

@@ -16,6 +16,7 @@ import com.farimarwat.speedtest.domain.usecase.GetAllTestSpeedUseCase
 import com.farimarwat.speedtest.domain.usecase.InsertTestSpeedUseCase
 import com.farimarwat.speedtest.presentation.screen.SettingsScreen
 import com.farimarwat.speedtest.presentation.viewmodel.HistoryScreenViewModel
+import com.farimarwat.speedtest.presentation.viewmodel.MapScreenViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.SettingsScreenViewModel
 import io.ktor.client.HttpClient
 import org.koin.core.module.Module
@@ -44,6 +45,7 @@ val sharedModule = module {
     viewModelOf(::TestViewModel)
     viewModelOf(::HistoryScreenViewModel)
     viewModelOf(::SettingsScreenViewModel)
+    viewModelOf(::MapScreenViewModel)
 }
 
 expect val httpClient:HttpClient

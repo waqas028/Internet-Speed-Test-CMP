@@ -2,6 +2,8 @@ platform :ios, '14.1'
 use_frameworks! :linkage => :static
 
 target 'iosApp' do
-  pod 'Google-Mobile-Ads-SDK'
-  pod 'composeApp', :path => '../composeApp'
+    pod 'composeApp', :path => '../composeApp'
+    pod 'Google-Mobile-Ads-SDK'
+    pod 'GoogleMaps'
+    pod 'Google-Maps-iOS-Utils'
 end

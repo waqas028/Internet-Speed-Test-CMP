@@ -18,9 +18,9 @@ class InsertTestSpeedUseCase(private val repository: SpeedTestRepository) {
                 providerName = stProvider.providerName ?: "Unknown",
                 serverName = stServer.sponsor ?: "Unknown",
                 providerLat = stProvider.lat?.toDouble() ?: 0.0,
-                providerLon = stProvider.lat?.toDouble() ?: 0.0,
+                providerLon = stProvider.lon?.toDouble() ?: 0.0,
                 serverLat = stServer.lat?.toDouble() ?: 0.0,
-                serverLon = stServer.lat?.toDouble() ?: 0.0,
+                serverLon = stServer.lon?.toDouble() ?: 0.0,
                 downSpeed = downSpeed,
                 upSpeed = upSpeed,
                 performedAt = Clock.System.now()
