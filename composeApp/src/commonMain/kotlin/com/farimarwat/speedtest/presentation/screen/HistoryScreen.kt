@@ -1,23 +1,16 @@
 package com.farimarwat.speedtest.presentation.screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.farimarwat.speedtest.presentation.component.SpeedTestCard
@@ -25,7 +18,6 @@ import com.farimarwat.speedtest.presentation.navigation.Screen
 import com.farimarwat.speedtest.presentation.viewmodel.HistoryScreenViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.MapScreenViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
     navController: NavController,
@@ -37,35 +29,22 @@ fun HistoryScreen(
         historyScreenViewModel.listSpeedTests()
     }
     val list by historyScreenViewModel.speedTests.collectAsStateWithLifecycle()
+
     Box(modifier = modifier) {
-        Column {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                ),
-                title = { Text("Test History") },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigateUp()
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
+        LazyColumn(
+            modifier = Modifier.padding(horizontal = 15.dp),
+            contentPadding = PaddingValues(vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+            items(
+                items = list,
+                key = {
+                    it.id
                 }
-            )
-            LazyColumn {
-                items(
-                    items = list,
-                    key = {
-                        it.id
-                    }
-                ) {
-                    SpeedTestCard(it){
-                        mapScreenViewModel.setSpeedTest(it)
-                        navController.navigate(Screen.TestMap.route)
-                    }
+            ) {speedTest->
+                SpeedTestCard(speedTest){
+                    mapScreenViewModel.setSpeedTest(speedTest)
+                    navController.navigate(Screen.TestMap.route)
                 }
             }
         }

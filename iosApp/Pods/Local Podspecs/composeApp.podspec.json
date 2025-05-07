@@ -14,15 +14,9 @@
     "ios": "14.1"
   },
   "dependencies": {
-    "Google-Maps-iOS-Utils": [
-
-    ],
-    "Google-Mobile-Ads-SDK": [
-
-    ],
-    "GoogleMaps": [
-
-    ]
+    "Google-Maps-iOS-Utils": [],
+    "Google-Mobile-Ads-SDK": [],
+    "GoogleMaps": []
   },
   "xcconfig": {
     "ENABLE_USER_SCRIPT_SANDBOXING": "NO"

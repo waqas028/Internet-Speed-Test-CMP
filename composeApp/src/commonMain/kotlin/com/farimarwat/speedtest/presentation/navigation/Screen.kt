@@ -7,30 +7,34 @@ import speedtest.composeapp.generated.resources.ic_home
 import speedtest.composeapp.generated.resources.ic_settings
 
 sealed class Screen(
-    val route:String,
-    val title:String = "",
+    val route: String,
+    val title: String = "",
     val icon: DrawableResource? = null
-    ) {
-    object Home:Screen(
+) {
+    data object Home : Screen(
         title = "Home",
         route = "home_screen",
         icon = Res.drawable.ic_home
     )
-    object Test:Screen(
+
+    data object Test : Screen(
         title = "Test",
         route = "test_screen"
     )
-    object History:Screen(
+
+    data object History : Screen(
         title = "History",
         route = "history_screen",
         icon = Res.drawable.ic_history
     )
-    object Settings:Screen(
+
+    data object Settings : Screen(
         title = "Settings",
         route = "settings_screen",
         icon = Res.drawable.ic_settings
     )
-    object TestMap:Screen(
+
+    data object TestMap : Screen(
         title = "Test Map",
         route = "test_map"
     )

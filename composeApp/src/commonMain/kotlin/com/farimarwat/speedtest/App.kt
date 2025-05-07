@@ -8,29 +8,32 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavArgument
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import coil3.Uri
-import com.farimarwat.speedtest.domain.model.SpeedTest
-import com.farimarwat.speedtest.feature.map.TestLocations
+import com.farimarwat.speedtest.presentation.component.SimpleTopAppBar
 import com.farimarwat.speedtest.presentation.navigation.Screen
 import com.farimarwat.speedtest.presentation.screen.HistoryScreen
 import com.farimarwat.speedtest.presentation.screen.HomeScreen
@@ -42,15 +45,13 @@ import com.farimarwat.speedtest.presentation.viewmodel.HistoryScreenViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.HomeViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.MapScreenViewModel
 import com.farimarwat.speedtest.presentation.viewmodel.TestViewModel
-import com.farimarwat.speedtest.utils.decodeUrl
-import io.ktor.http.decodeURLPart
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import speedtest.composeapp.generated.resources.Res
 import speedtest.composeapp.generated.resources.server
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun App(
@@ -64,16 +65,13 @@ fun App(
     ) {
         var showBottomBar by remember { mutableStateOf(true) }
         val navController = rememberNavController()
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         val route = currentBackStackEntry?.destination?.route
         LaunchedEffect(route){
-            when(route){
-                Screen.Home.route, Screen.History.route, Screen.Settings.route ->{
-                    showBottomBar = true
-                }
-                else ->{
-                    showBottomBar = false
-                }
+            showBottomBar = when(route){
+                Screen.Home.route, Screen.History.route, Screen.Settings.route -> true
+                else -> false
             }
         }
         val list = listOf(
@@ -81,7 +79,22 @@ fun App(
             Screen.History,
             Screen.Settings
         )
+
+        val topAppBarList = listOf(
+            Screen.History,
+            Screen.Settings
+        )
+
         Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                if (topAppBarList.any { it.route == route }) SimpleTopAppBar(
+                    navController = navController,
+                    scrollBehavior = scrollBehavior,
+                )
+            },
             bottomBar = {
                 AnimatedVisibility(
                     visible = showBottomBar,
@@ -93,10 +106,9 @@ fun App(
                         targetOffsetY = { fullHeight -> fullHeight }, // Exits to bottom
                         animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing)
                     )
-                ){
+                ) {
                     NavigationBar {
-                        var selected by remember { mutableStateOf(0) }
-                        list.forEach{ item ->
+                        list.forEach { item ->
                             NavigationBarItem(
                                 label = { Text(item.title) },
                                 icon = {
@@ -117,9 +129,8 @@ fun App(
                 }
             }
         ) { innerPadding ->
+            val modifier = Modifier.padding(innerPadding)
 
-            val modifier = Modifier
-                .padding(innerPadding)
             NavHost(
                 navController = navController,
                 startDestination = Screen.Home.route
