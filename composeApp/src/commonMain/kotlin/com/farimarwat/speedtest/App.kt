@@ -162,7 +162,7 @@ fun App(
                     )
                 }
                 composable(Screen.Settings.route) {
-                    SettingsScreen()
+                    SettingsScreen(modifier = modifier)
                 }
 
                 composable(Screen.TestMap.route){

@@ -43,4 +43,8 @@ fun Double.roundToDecimals(decimals: Int): Double {
 
 expect fun Float.to2DecimalString(): String
 
+expect fun shareText(message: String)
 
+expect fun getAppVersion(): String
+
+expect fun sendFeedbackEmail(toEmail: String, subject: String, body: String)
